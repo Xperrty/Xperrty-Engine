@@ -21,7 +21,7 @@ namespace Xperrty {
 		timeSinceStartup += deltaTime;
 		lastTime = t;
 		ed.setValue(deltaTime);
-		EventManager::invoke(UPDATE, &ed);
+		
 	}
 
 	float Time::dt()

@@ -129,11 +129,13 @@ namespace Xperrty {
 	}
 	void Window::onMouseEvent(GLFWwindow* window, int button, int action, int mods)
 	{
+		InputManager::onMousePressed(button, action);
 		XP_INFO("Pressed Mouse {0} action {1}", button, action);
 
 	}
 	void Window::onMouseScroll(GLFWwindow* window, double xoffset, double yoffset)
 	{
+		InputManager::onMouseScroll(yoffset);
 		XP_INFO("scroll Mouse Mouse x {0} y {1}", xoffset, yoffset);
 
 	}

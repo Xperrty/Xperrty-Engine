@@ -5,7 +5,7 @@ template <typename T_Key, typename T_Value>
 class Dictionary : public std::unordered_map<T_Key, T_Value>
 {
 public:
-	inline void add(T_Key key, T_Value value) {
+	inline void add(const T_Key& key, const T_Value& value) {
 		(*this)[key]=value;
 	}
 

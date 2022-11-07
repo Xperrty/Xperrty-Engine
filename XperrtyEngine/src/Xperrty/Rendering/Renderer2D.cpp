@@ -1,11 +1,9 @@
 #include "xppch.h"
 #include "Renderer2D.h"
-#include "Texture.h"
-#include "Shader.h"
-#include "glad/glad.h"
+//#include "glad/glad.h"
 #include "Xperrty/Math/Rect.h"
-#include "Xperrty/Rendering/Window.h"
-#include "Camera.h"
+#include "Cameras/Camera.h"
+#include "glad/glad.h"
 //#include ""
 static void GLClearError() {
 	while (glGetError() != GL_NO_ERROR);
@@ -17,15 +15,31 @@ static void GLCheckError() {
 }
 namespace Xperrty {
 
+	Renderer2D* Renderer2D::instance;
 	Renderer2D::Renderer2D() :immediate_VAO(0), immediate_indexBuffer(0), immediate_vertBuffer(0)
 	{
 		//ToDo:Please remove this...
-		activeShader = new Shader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
+		activeShader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
+		instance = this;
 		activeShader->initOpenGl();
 		generateImmediatBuffers();//DEBUG
 		glUseProgram(activeShader->getShaderId());
 
 		glViewport(0, 0, Window::instance->getWidth(), Window::instance->getHeight());
+		
+	}
+	void Renderer2D::renderBatch(Batch& batch) {
+		Shader* batchShader = batch.getMaterial()->getShader();
+		if (batchShader == lastUsedShader) {
+
+		}
+		else {
+			lastUsedShader = batchShader;
+		}
+		lastUsedShader->bind();
+		batch.getMaterial()->uploadUniforms();
+		BufferData& buffer = batch.getBufferData();
+		//glBindVertexArray(buffer.)
 	}
 
 	void Renderer2D::renderQuadImmediate(Rect bounds, Shader* shader, Texture* texture, const Color& color)
@@ -55,8 +69,9 @@ namespace Xperrty {
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0);
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)8);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 6));
-		glUniform2f(0, Window::instance->getWidth(), Window::instance->getHeight());
-		glUniform2f(1, Window::instance->getWidth()/2, -Window::instance->getHeight()/2);
+		glUniform2f(glGetUniformLocation(activeShader->getShaderId(), "u_resolution"), Window::instance->getWidth(), Window::instance->getHeight());
+		glUniform2f(glGetUniformLocation(activeShader->getShaderId(), "u_projectionVector"), Window::instance->getWidth()/2, -Window::instance->getHeight()/2);
+		glUniform3f(glGetUniformLocation(activeShader->getShaderId(),"u_cameraPosition"), Camera::getActiveCamera()->getBounds().getX(), Camera::getActiveCamera()->getBounds().getY(), Camera::getActiveCamera()->getScale());
 
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, indices, GL_STATIC_DRAW);
 

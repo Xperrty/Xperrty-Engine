@@ -12,11 +12,12 @@ namespace Xperrty {
 		inline void setScale(float val) { scale = val; }
 		inline float getCenterX() { bounds.getCenterX(); }
 		inline float getCenterY() { bounds.getCenterY(); }
+		inline Rect& getBounds() { return bounds; }
 		inline void setActive(bool val) { active = val; Camera::setActiveCamera(this);}
 		inline bool isActive() { return active; }
 		inline float getScale() { return scale; }
-		~Camera();
-	private:
+		virtual ~Camera();
+	protected:
 		Rect bounds;
 		float scale;
 		bool active;

@@ -18,6 +18,6 @@ namespace Xperrty {
 	};
 
 	enum EngineEventType {
-		UPDATE, FIXED_UPDATE
+		UPDATE, FIXED_UPDATE, INPUT_KEY_DOWN, INPUT_KEY_UP
 	};
 }

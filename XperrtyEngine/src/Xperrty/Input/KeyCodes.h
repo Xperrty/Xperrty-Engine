@@ -129,8 +129,8 @@ namespace Xperrty {
 	const char* keyCodeStr(KeyCodes code);
 
 	enum InputActions {
-		Down = 0,
-		Up = 1,
+		Up = 0,
+		Down = 1,
 		Repeat = 2
 	};
 

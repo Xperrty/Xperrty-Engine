@@ -1,14 +1,17 @@
 #include "xppch.h"
 #include "Application.h"
-#include "glad/glad.h"
-#include "Rendering/Renderer2D.h"
+//#include "glad/glad.h"
+//#include "Rendering/Renderer2D.h"
 
 //TODO:DELETE
 #include "Xperrty/Time/Timer.h"
 #include "Xperrty/Testing/Test.h"
 #include "stb_image.h"
-#include "Memory/ObjectPool.h"
+#include "Performance/ObjectPool.h"
 #include "Xperrty/Math/Rect.h"
+#include "Xperrty/Rendering/Cameras/RTSCamera.h"
+#include "glad/glad.h"
+//#include "Xperrty/Rendering/Material.h"
 namespace Xperrty {
 
 	Application::Application() :
@@ -31,9 +34,15 @@ namespace Xperrty {
 		t->uploadToGpu();
 		//Test test;
 		//XP_INFO("TESTS SHOULD BE DONE!");
+		RTSCamera* camera = new RTSCamera(Rect(0, 0, window->getWidth(), window->getHeight()), 1, 1000);
+		camera->setActive(true);
+		XP_INFO("Size of vert: {0}", sizeof(MaterialVertexData));
 		while (isRunning)
 		{
+			
 			time->update();
+			InputManager::update();
+			EventManager::invoke(UPDATE, &Time::ed);
 			updates++;
 			glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);

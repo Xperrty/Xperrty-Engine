@@ -5,13 +5,19 @@
 #include "glad/glad.h"
 
 namespace Xperrty {
-	Shader::Shader(const std::string& shaderSrc) :shaderSrc(shaderSrc), vertSrc(), fragSrc(), shaderId(-1)
+	Shader::Shader(const std::string& shaderSrc) :shaderSrc(shaderSrc), vertSrc(), fragSrc(), shaderType("Shader"), shaderId(-1), uniformLocations()
 	{
+		XP_TRACE("Parsing Shader Type: {0}", shaderType);
+		XP_TRACE("----------------------------------------------------");
 		parseShaders();
+		initOpenGl();
 	}
 	void Shader::initOpenGl()
 	{
 		//ToDo: Move in separate functions...;
+		int lastShaderBound;
+		glGetIntegerv(GL_CURRENT_PROGRAM, &lastShaderBound);
+
 		auto vertProgram = glCreateShader(GL_VERTEX_SHADER);
 		const char* vertCSrc = vertSrc.c_str();
 		glShaderSource(vertProgram, 1, &vertCSrc, NULL);
@@ -25,8 +31,6 @@ namespace Xperrty {
 		if (!checkShaderCompileError("Fragment", fragProgram)) {
 			glDeleteProgram(vertProgram);
 		}
-
-
 		auto program = glCreateProgram();
 
 		glAttachShader(program, vertProgram);
@@ -35,10 +39,15 @@ namespace Xperrty {
 		glLinkProgram(program);
 		glValidateProgram(program);
 		shaderId = program;
+		bind();
+		getUniformLocations();
+		XP_TRACE("----------------------------------------------------");
 
+		glDeleteShader(vertProgram);
+		glDeleteShader(fragProgram);
 
-		//glDeleteShader(vertProgram);
-		//glDeleteShader(fragProgram);
+		//Restor the last shader
+		if (lastShaderBound) glUseProgram(lastShaderBound);
 	}
 
 	bool Shader::checkShaderCompileError(const char* shaderType, unsigned int program) {
@@ -60,10 +69,49 @@ namespace Xperrty {
 	}
 	void Shader::bind()
 	{
+		glUseProgram(shaderId);
+	}
+
+	void Shader::unbind() {
+		//glActiveShaderProgram()
+		glUseProgram(0);
+	}
+
+	void Shader::setUniform1f(unsigned int location, float a)
+	{
+		 glUniform1f(location, a); 
+	}
+
+	void Shader::setUniform2f(unsigned int location, float a, float b)
+	{
+		glUniform2f(location, a, b);
+	}
+
+	void Shader::setUniform3f(unsigned int location, float a, float b, float c)
+	{
+		glUniform3f(location, a, b, c);
+	}
+
+	void Shader::setUniform4f(unsigned int location, float a, float b, float c, float d)
+	{
+		glUniform4f(location, a, b, c, d);
+	}
+
+	Dictionary < std::string, Shader*> Shader::shaderSrcMap;
+	Shader* Shader::getShader(const std::string& shaderSrc)
+	{
+		if (!shaderSrcMap.contains(shaderSrc)) shaderSrcMap.add(shaderSrc, new Shader(shaderSrc));
+		return shaderSrcMap[shaderSrc];
+	}
+
+	Shader* Shader::createShader(const std::string& shaderSrc)
+	{
+		return new Shader(shaderSrc);
 	}
 
 	Shader::~Shader()
 	{
+		glDeleteProgram(shaderId);
 	}
 	void Shader::parseShaders()
 	{
@@ -72,10 +120,52 @@ namespace Xperrty {
 		bool fragmentSrc = false;
 		//ToDo: change this... maybe support for other shader types
 		//ToDo: also please fix this string concat...
+
 		while (std::getline(shaderFile, line)) {
 			if (line.find("<Fragment>") != std::string::npos) fragmentSrc = true;
 			else if (!fragmentSrc) vertSrc.append(line + "\n");
 			else if (fragmentSrc) fragSrc.append(line + "\n");
+			//Searching for uniforms
+			if (line.find("uniform") != std::string::npos) {
+				//It's not a texture
+				if (line.find("sampler2D") == std::string::npos) {
+					//ToDo: clean this mess
+					//--
+					size_t pos = 0;
+					size_t lastPos = 0;
+					std::string uniformDeclaration;
+					int nonEmpty = 0;
+					if ((pos = line.find(";")) != std::string::npos) {
+						uniformDeclaration = line.substr(0, pos);
+						std::string token;
+						while ((pos = uniformDeclaration.find(" ")) != std::string::npos) {
+							token = uniformDeclaration.substr(0, pos);
+							if (token.size() != 0)nonEmpty++;
+							//We found our uniform name;
+							if (nonEmpty == 3) {
+								uniformLocations.add(token, 0);
+								XP_TRACE("Found Uniform mid string -{0}- len {1} ", token, token.size());
+								break;
+							}
+							uniformDeclaration.erase(0, pos + 1);
+							lastPos = pos;
+						}
+						if (nonEmpty != 3) {
+							uniformLocations.add(uniformDeclaration, 0);
+							XP_TRACE("Found Uniform at the end of the string -{0}- len {1} ", uniformDeclaration, uniformDeclaration.size());
+						}
+					}
+					//--
+				}
+			}
+		}
+	}
+	void Shader::getUniformLocations() {
+		for each (const auto & kv in uniformLocations)
+		{
+			unsigned int uniformLocation = glGetUniformLocation(shaderId, kv.first.c_str());
+			uniformLocations.add(kv.first, uniformLocation);
+			XP_INFO("Found Uniform {0} with location {1}", kv.first, uniformLocation);
 		}
 	}
 }

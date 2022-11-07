@@ -12,7 +12,6 @@ namespace Xperrty {
 		static float timeSinceStartup;
 		static long long lastTime;
 		static int totalFramesRendered;
-		static FloatEventData ed;
 
 		static long long inline internalTime();
 	public:
@@ -24,6 +23,7 @@ namespace Xperrty {
 		static float dtMS();
 		static float now();
 		static int totalFrames();
+		static FloatEventData ed;
 		
 
 		~Time();

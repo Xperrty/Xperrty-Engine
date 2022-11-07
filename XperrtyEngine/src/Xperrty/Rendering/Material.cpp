@@ -1,80 +1,114 @@
 #include "xppch.h"
 #include "Material.h"
 #include "Xperrty/World/GameObject.h"
+#include "Window.h"
+#include "Cameras/RtsCamera.h"
 namespace Xperrty {
-	Material::Material(Shader* shader,Texture* texture):shader(shader),texture(texture), memLocation(nullptr)
+	Material::Material(Shader* shader, Texture* texture, GameObject* object) :shader(shader), texture(texture), gameObject(object), memLocation(nullptr), bl(nullptr), br(nullptr), tr(nullptr), tl(nullptr)
 	{
 	}
-	void Material::setVerticesMemLocation(float* location)
+
+	void Material::setVerticesMemLocation(MaterialVertexData* location)
 	{
 		memLocation = location;
+		createVertices();
 	}
-	void Material::updateVertices(GameObject* gameObject)
+
+	void Material::uploadUniforms() {
+		auto resolutionLocation = shader->getUniformLocation("u_resolution");
+		auto projectionLocation = shader->getUniformLocation("u_projectionVector");
+		auto cameraPositionLocation = shader->getUniformLocation("u_cameraPosition");
+		Window* window = Window::instance;
+		Camera* camera = Camera::getActiveCamera();
+		shader->setUniform2f(resolutionLocation, window->getWidth(), window->getHeight());
+		shader->setUniform2f(projectionLocation, window->getWidth() / 2, -window->getHeight() / 2);
+		shader->setUniform3f(cameraPositionLocation, camera->getBounds().getX(), camera->getBounds().getY(), camera->getScale());
+	}
+
+	void Material::createVertices()
 	{
-        TransformMatrix2D& wt = gameObject->getWorldTransformMatrix();
-        /*var texture = this.texture;
-        var wt = object.worldTransform;
-        var uvs = texture.uvs;
-        var aX = object.anchor.x;
-        var aY = object.anchor.y;
-        var w0, w1, h0, h1;
-        w0 = (object.forcedWidth || (texture.width)) * (1 - aX);
-        w1 = (object.forcedWidth || (texture.width)) * -aX;
-        h0 = (object.forcedHeight || texture.height) * (1 - aY);
-        h1 = (object.forcedHeight || texture.height) * -aY;
-        var i = vertexI;
-        var a = wt.a;
-        var b = wt.b;
-        var c = wt.c;
-        var d = wt.d;
-        var tx = wt.tx;
-        var ty = wt.ty;
-        var positions = vertexBuffer;
-        var color = this.color;
-        var texId = Quack.Shaders.MultiTextureShader.textureArray.indexOf(this.texture.baseTexture);
-        if (texId == -1)
-            this.shader.setTexture(this.texture);
-        texId = Quack.Shaders.MultiTextureShader.textureArray.indexOf(this.texture.baseTexture);
-        positions[i + 0] = a * w1 + c * h0 + tx;
-        positions[i + 1] = d * h0 + b * w1 + ty;
-        positions[i + 2] = uvs[0];
-        positions[i + 3] = uvs[1];
-        positions[i + 4] = object.worldAlpha;
-        positions[i + 5] = color ? color.r / 255 : 1;
-        positions[i + 6] = color ? color.g / 255 : 1;
-        positions[i + 7] = color ? color.b / 255 : 1;
-        positions[i + 8] = color ? color.a : 1;
-        positions[i + 9] = texId;
-        positions[i + 10] = a * w1 + c * h1 + tx;
-        positions[i + 11] = d * h1 + b * w1 + ty;
-        positions[i + 12] = uvs[2];
-        positions[i + 13] = uvs[3];
-        positions[i + 14] = object.worldAlpha;
-        positions[i + 15] = color ? color.r / 255 : 1;
-        positions[i + 16] = color ? color.g / 255 : 1;
-        positions[i + 17] = color ? color.b / 255 : 1;
-        positions[i + 18] = color ? color.a : 1;
-        positions[i + 19] = texId;
-        positions[i + 20] = a * w0 + c * h1 + tx;
-        positions[i + 21] = d * h1 + b * w0 + ty;
-        positions[i + 22] = uvs[4];
-        positions[i + 23] = uvs[5];
-        positions[i + 24] = object.worldAlpha;
-        positions[i + 25] = color ? color.r / 255 : 1;
-        positions[i + 26] = color ? color.g / 255 : 1;
-        positions[i + 27] = color ? color.b / 255 : 1;
-        positions[i + 28] = color ? color.a : 1;
-        positions[i + 29] = texId;
-        positions[i + 30] = a * w0 + c * h0 + tx;
-        positions[i + 31] = d * h0 + b * w0 + ty;
-        positions[i + 32] = uvs[6];
-        positions[i + 33] = uvs[7];
-        positions[i + 34] = object.worldAlpha;
-        positions[i + 35] = color ? color.r / 255 : 1;
-        positions[i + 36] = color ? color.g / 255 : 1;
-        positions[i + 37] = color ? color.b / 255 : 1;
-        positions[i + 38] = color ? color.a : 1;
-        positions[i + 39] = texId;
-        this.shader.game.renderer.dataAddedInShader(this.shader.getStride());*/
+		TransformMatrix2D& wt = gameObject->getWorldTransformMatrix();
+		float* uvs = texture->getUVs();
+		float aX = gameObject->getAnchorX();
+		float aY = gameObject->getAnchorY();
+		//ToDo: Add forced width and height for objects.
+		//float w0 = (gameObject.forcedWidth || (texture.width)) * (1 - aX);
+		//float w1 = (gameObject.forcedWidth || (texture.width)) * -aX;
+		//float h0 = (gameObject.forcedHeight || texture.height) * (1 - aY);
+		//float h1 = (gameObject.forcedHeight || texture.height) * -aY;
+		float w0 = texture->getWidth() * (1 - aX);
+		float w1 = texture->getWidth() * -aX;
+		float h0 = texture->getHeight() * (1 - aY);
+		float h1 = texture->getHeight() * -aY;
+
+		int i = 0;
+		float a = wt.getA();
+		float b = wt.getB();
+		float c = wt.getC();
+		float d = wt.getD();
+		float tx = wt.getTx();
+		float ty = wt.getTy();
+		int texId = 0;
+
+		bl = new(memLocation + 0) MaterialVertexData(a * w1 + c * h0 + tx, d * h0 + b * w1 + ty, uvs[0], uvs[1], gameObject->getWorldAlpha(), texId);
+		br = new(memLocation + 1) MaterialVertexData(a * w0 + c * h0 + tx, d * h0 + b * w0 + ty, uvs[2], uvs[3], gameObject->getWorldAlpha(), texId);
+		tr = new(memLocation + 2) MaterialVertexData(a * w0 + c * h1 + tx, d * h1 + b * w0 + ty, uvs[4], uvs[5], gameObject->getWorldAlpha(), texId);
+		tl = new(memLocation + 3) MaterialVertexData(a * w1 + c * h1 + tx, d * h1 + b * w1 + ty, uvs[6], uvs[7], gameObject->getWorldAlpha(), texId);
+
 	}
+
+	void Material::updateVertices() {
+		TransformMatrix2D& wt = gameObject->getWorldTransformMatrix();
+		float* uvs = texture->getUVs();
+		float aX = gameObject->getAnchorX();
+		float aY = gameObject->getAnchorY();
+		//ToDo: Add forced width and height for objects.
+		//float w0 = (gameObject.forcedWidth || (texture.width)) * (1 - aX);
+		//float w1 = (gameObject.forcedWidth || (texture.width)) * -aX;
+		//float h0 = (gameObject.forcedHeight || texture.height) * (1 - aY);
+		//float h1 = (gameObject.forcedHeight || texture.height) * -aY;
+		float w0 = texture->getWidth() * (1 - aX);
+		float w1 = texture->getWidth() * -aX;
+		float h0 = texture->getHeight() * (1 - aY);
+		float h1 = texture->getHeight() * -aY;
+
+		int i = 0;
+		float a = wt.getA();
+		float b = wt.getB();
+		float c = wt.getC();
+		float d = wt.getD();
+		float tx = wt.getTx();
+		float ty = wt.getTy();
+		int texId = 0;
+
+		//bl
+		bl->position[0] = a * w1 + c * h0 + tx;
+		bl->position[1] = d * h0 + b * w1 + ty;
+		bl->UV[0] = uvs[0];
+		bl->UV[1] = uvs[1];
+		bl->alpha = gameObject->getWorldAlpha();
+		bl->texId = texId;
+		//br
+		br->position[0] = a * w0 + c * h0 + tx;
+		br->position[1] = d * h0 + b * w0 + ty;
+		br->UV[0] = uvs[2];
+		br->UV[1] = uvs[3];
+		br->alpha = gameObject->getWorldAlpha();
+		br->texId = texId;
+		//tr
+		tr->position[0] = a * w0 + c * h1 + tx;
+		tr->position[1] = d * h1 + b * w0 + ty;
+		tr->UV[0] = uvs[4];
+		tr->UV[1] = uvs[5];
+		tr->alpha = gameObject->getWorldAlpha();
+		tr->texId = texId;
+		//tl
+		tl->position[0] = a * w1 + c * h1 + tx;
+		tl->position[1] = d * h1 + b * w1 + ty;
+		tl->UV[0] = uvs[6];
+		tl->UV[1] = uvs[7];
+		tl->alpha = gameObject->getWorldAlpha();
+		tl->texId = texId;
+	}
+
 }

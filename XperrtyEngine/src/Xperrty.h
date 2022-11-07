@@ -6,7 +6,7 @@
 //Rendering
 #include "Xperrty/EntryPoint.h"
 #include "Xperrty/Rendering/Window.h"
-#include "Xperrty/Rendering/Camera.h"
+#include "Xperrty/Rendering/Cameras/Camera.h"
 
 //Events
 #include "Xperrty/Events/EventData.h"

@@ -4,16 +4,21 @@ namespace Xperrty {
 	class BufferData
 	{
 	public:
-		BufferData(unsigned int bufferSize, unsigned int vertexSize );
-		inline float* getVertexBufferData() { return vertexData.data(); }
+		BufferData(unsigned int bufferSize, unsigned int vertexSize);
+		inline char* getVertexBufferData() { return vertexData; }
+		inline char* getVertex(unsigned int index) { return (vertexData + vertexSize * 4 * index); }
+		inline unsigned int getVertexId() const { return glVertexId; }
+		inline unsigned int getIndexId() const { return glIndexId; }
 		inline int* getIndexBufferData() { return indexData.data(); }
-		inline void addDataToBuffer(float data) { vertexData.push_back(data); }
-
+		void uploadData();
 		~BufferData();
 	private:
 		unsigned int bufferSize;
 		unsigned int vertexSize;
-		Array<float> vertexData;
+		unsigned int glVertexId;
+		unsigned int glIndexId;
+		unsigned int bufferByteSize;
+		char* vertexData;
 		Array<int> indexData;
 	};
 

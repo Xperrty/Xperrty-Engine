@@ -15,8 +15,8 @@ public:
 	virtual void onEngineEvent(Xperrty::EngineEventType eventNr, Xperrty::EventData* eventData) override
 	{
 
-		if (Xperrty::InputManager::isKeyDown(Xperrty::KEY_A, 1)) {
-			APP_TRACE("LEFT");
+		if (Xperrty::InputManager::isKeyDown(Xperrty::KEY_A, 0)) {
+			//APP_TRACE("LEFT");
 		}
 	}
 };

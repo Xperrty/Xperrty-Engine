@@ -2,9 +2,13 @@
 #include "Texture.h"
 #include "stb_image.h"
 #include "glad/glad.h"
-
+//0,1-------1,1
+// |		 |
+// |   UVs	 |
+// |		 |
+//0,0-------1,0
 namespace Xperrty {
-	Texture::Texture(const std::string& path) :pixels(nullptr), width(0), height(0), channels(0), uvs{ 0,0,0,0,0,0,0,0 }, isPixelMemoryFree(true)
+	Texture::Texture(const std::string& path) :pixels(nullptr), width(0), height(0), channels(0), uvs{ 0,0,1,0,1,1,0,1 }, isPixelMemoryFree(true)
 	{
 		loadTexture(path);
 	}
@@ -21,7 +25,6 @@ namespace Xperrty {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-
 		//ToDo: free texture after uploading to gpu;
 
 	}

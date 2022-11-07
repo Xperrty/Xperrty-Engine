@@ -4,7 +4,7 @@
 #include "Xperrty/Rendering/Window.h"
 #include "Xperrty/Time/Time.h"
 #include "Xperrty/Rendering/Renderer2D.h"
-#include "Xperrty/Rendering/Camera.h"
+#include "Xperrty/Rendering/Cameras/Camera.h"
 #include "Xperrty/Input/InputManager.h"
 namespace Xperrty {
 
