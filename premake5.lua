@@ -35,8 +35,8 @@ project "XperrtyEngine"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
-        "vendor/stb_image/**.h",
-		"vendor/stb_image/**.cpp"
+        "%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp"
     }
 
     links{
