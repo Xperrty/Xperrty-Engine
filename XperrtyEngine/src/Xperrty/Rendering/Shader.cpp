@@ -72,6 +72,30 @@ namespace Xperrty {
 		glUseProgram(shaderId);
 	}
 
+	//Initializes the attributes for the currently bound buffer.
+	void Shader::initAttributesForBuffer() {
+		unsigned int aPosition = glGetAttribLocation(shaderId, "aPosition");//2 floats
+		unsigned int aTextureCoords = glGetAttribLocation(shaderId, "aTextureCoords");// 2 floats
+		unsigned int aColor = glGetAttribLocation(shaderId, "aColor");//4 floats
+		unsigned int aAlpha = glGetAttribLocation(shaderId, "aAlpha");//1 float
+
+		unsigned int positionOffset = 0;//0								->2 floats
+		unsigned int textureCoordsOffset = 2 * sizeof(float);//0 + 2	->2 floats
+		unsigned int colorOffset = 4 * sizeof(float);//2 + 2			->4 floats
+		unsigned int alphaOffset = 8 * sizeof(float);//4+4				->1 float
+
+		unsigned int stride = getVertSize() * 4;
+		glEnableVertexAttribArray(aPosition);
+		glEnableVertexAttribArray(aTextureCoords);
+		glEnableVertexAttribArray(aColor);
+		glEnableVertexAttribArray(aAlpha);
+
+		glVertexAttribPointer(aPosition, 2, GL_FLOAT, false, stride, (void*)positionOffset);
+		glVertexAttribPointer(aTextureCoords, 4, GL_FLOAT, false, stride, (void*)textureCoordsOffset);
+		glVertexAttribPointer(aColor, 4, GL_FLOAT, false, stride, (void*)colorOffset);
+		glVertexAttribPointer(aAlpha, 4, GL_FLOAT, false, stride, (void*)alphaOffset);
+	}
+
 	void Shader::unbind() {
 		//glActiveShaderProgram()
 		glUseProgram(0);

@@ -86,29 +86,29 @@ namespace Xperrty {
 		bl->position[1] = d * h0 + b * w1 + ty;
 		bl->UV[0] = uvs[0];
 		bl->UV[1] = uvs[1];
+		bl->UV[2] = texId;
 		bl->alpha = gameObject->getWorldAlpha();
-		bl->texId = texId;
 		//br
 		br->position[0] = a * w0 + c * h0 + tx;
 		br->position[1] = d * h0 + b * w0 + ty;
 		br->UV[0] = uvs[2];
 		br->UV[1] = uvs[3];
+		br->UV[2] = texId;
 		br->alpha = gameObject->getWorldAlpha();
-		br->texId = texId;
 		//tr
 		tr->position[0] = a * w0 + c * h1 + tx;
 		tr->position[1] = d * h1 + b * w0 + ty;
 		tr->UV[0] = uvs[4];
 		tr->UV[1] = uvs[5];
+		tr->UV[2] = texId;
 		tr->alpha = gameObject->getWorldAlpha();
-		tr->texId = texId;
 		//tl
 		tl->position[0] = a * w1 + c * h1 + tx;
 		tl->position[1] = d * h1 + b * w1 + ty;
 		tl->UV[0] = uvs[6];
 		tl->UV[1] = uvs[7];
+		tl->UV[2] = texId;
 		tl->alpha = gameObject->getWorldAlpha();
-		tl->texId = texId;
 	}
 
 }

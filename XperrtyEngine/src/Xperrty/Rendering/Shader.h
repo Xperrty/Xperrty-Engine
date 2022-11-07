@@ -1,5 +1,4 @@
 #pragma once
-#include "Xperrty/Rendering/Utils/BufferData.h"
 namespace Xperrty {
 
 	class Shader
@@ -11,11 +10,14 @@ namespace Xperrty {
 		void bind();
 		void unbind();
 
-		void setUniform1f(unsigned int location, float a); 
-		void setUniform2f(unsigned int location, float a, float b); 
-		void setUniform3f(unsigned int location, float a, float b, float c); 
+		void setUniform1f(unsigned int location, float a);
+		void setUniform2f(unsigned int location, float a, float b);
+		void setUniform3f(unsigned int location, float a, float b, float c);
 		void setUniform4f(unsigned int location, float a, float b, float c, float d);
 
+		void initAttributesForBuffer();
+
+		inline virtual unsigned int getVertSize() { return 10 * sizeof(float); }
 		inline unsigned int getShaderId() { return shaderId; };
 		inline unsigned int getUniformLocation(const std::string& uniformName) { return uniformLocations[uniformName]; };
 		//Creates or returns an already created shader;

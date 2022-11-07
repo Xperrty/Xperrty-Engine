@@ -30,7 +30,8 @@ namespace Xperrty {
 	void Application::run() {
 		std::cout << "RUN!" << std::endl;
 		Timer<Application> timer(5000.0f, -1, this, &Application::onTimerDone);
-		Texture* t = new Texture("E:\\Projects\\Git\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
+		//Texture* t = new Texture("E:\\Projects\\Git\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
+		Texture* t = new Texture("D:\\Performance 4\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
 		t->uploadToGpu();
 		//Test test;
 		//XP_INFO("TESTS SHOULD BE DONE!");
