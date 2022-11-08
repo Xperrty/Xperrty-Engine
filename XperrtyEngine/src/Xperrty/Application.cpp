@@ -32,7 +32,9 @@ namespace Xperrty {
 	void Application::run() {
 		std::cout << "RUN!" << std::endl;
 		Timer<Application> timer(5000.0f, -1, this, &Application::onTimerDone);
-		Texture* t = new Texture("E:\\Projects\\Git\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
+		//Texture* t = new Texture("E:\\Projects\\Git\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
+		//Shader* shader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
+		Texture* t = new Texture("D:\\Performance 4\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
 		Shader* shader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
 		ObjectPool<GameObject> objectPool(2000);
 		ObjectPool<Material> materialPool(2000);
