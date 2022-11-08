@@ -20,7 +20,7 @@ namespace Xperrty {
 		inline void setHeight(float newH) { height = newH; };
 		inline void setCenterX(float newCX) { x = newCX - width / 2; };
 		inline void setCenterY(float newCY) { y = newCY - height / 2; };
-		inline void setCenter(Vector2 newC) {
+		inline void setCenter(const Vector2& newC) {
 			x = newC.x - width / 2;
 			y = newC.y - height / 2;
 		};

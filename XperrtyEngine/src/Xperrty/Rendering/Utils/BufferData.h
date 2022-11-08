@@ -13,6 +13,8 @@ namespace Xperrty {
 		inline int* getIndexBufferData() { return indexData.data(); }
 		void uploadData();
 		~BufferData();
+		BufferData(const BufferData& other) = delete;
+		BufferData(BufferData& other) = delete;
 	private:
 		unsigned int bufferSize;
 		unsigned int vertexSize;
@@ -20,6 +22,7 @@ namespace Xperrty {
 		unsigned int glIndexId;
 		unsigned int glVAOId;
 		unsigned int bufferByteSize;
+		Shader* shader;
 		char* vertexData;
 		Array<int> indexData;
 	};

@@ -21,7 +21,7 @@ namespace Xperrty {
 		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevelCount, GL_RGBA8, width, height, layerCount);
 		glTexStorage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, width, height, 1);
 		//glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, layerCount, GL_RGBA, GL_UNSIGNED_BYTE, texels);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, width, height, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, width, height, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 		//glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

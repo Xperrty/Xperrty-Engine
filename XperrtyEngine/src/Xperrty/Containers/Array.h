@@ -4,7 +4,13 @@
 template<typename T>
 class Array : public std::vector<T> {
 public:
-	bool remove(const T& val, bool continueAfterFirst = true)
+	/// <summary>
+	/// Removes the item from the Array. 
+	/// </summary>
+	/// <param name="val">Value to remove.</param>
+	/// <param name="continueAfterFirst">Should continue removing after the first element is found?</param>
+	/// <returns>Number of removed elements.</returns>
+	int remove(const T& val, bool continueAfterFirst = true)
 	{
 		int removedItems = 0;
 		for (int i = 0; i < size(); i++)
@@ -19,8 +25,12 @@ public:
 		}
 		return removedItems;
 	}
-
-	inline bool contains(T item) {
+	/// <summary>
+	/// Checks if the item exists in the Array.
+	/// </summary>
+	/// <param name="item">Item to check.</param>
+	/// <returns>True if item found.</returns>
+	inline bool contains(const T& item) {
 		return std::find(begin(), end(), item)!=end();
 	}
 };

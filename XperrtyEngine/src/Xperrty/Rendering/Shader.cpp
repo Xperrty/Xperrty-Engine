@@ -93,7 +93,7 @@ namespace Xperrty {
 		if (aTextureCoords != -1)glEnableVertexAttribArray(aTextureCoords);
 		if (aColor != -1)glEnableVertexAttribArray(aColor);
 		if (aAlpha != -1)glEnableVertexAttribArray(aAlpha);
-
+		stride = 40;
 		if (aPosition != -1)glVertexAttribPointer(aPosition, 2, GL_FLOAT, false, stride, (void*)positionOffset);
 		if (aTextureCoords != -1)glVertexAttribPointer(aTextureCoords, 3, GL_FLOAT, false, stride, (void*)textureCoordsOffset);
 		if (aColor != -1)glVertexAttribPointer(aColor, 4, GL_FLOAT, false, stride, (void*)colorOffset);

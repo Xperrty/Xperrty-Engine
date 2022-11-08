@@ -7,7 +7,7 @@ namespace Xperrty {
 	{
 	public:
 		//TODO: Implement events for client side...
-		//TODO: Implement add/remove queue... but for now adding/removing might interfere with event calls while invoking
+		//TODO: Implement add/remove queue... but for now adding/removing will interfere with event calls while invoking
 		static void addEventListener(EngineEventType evType, IEngineEventListener* listener);
 		static void removeEventListener(EngineEventType evType, IEngineEventListener* listener);
 		static void invoke(EngineEventType evType, EventData* data);

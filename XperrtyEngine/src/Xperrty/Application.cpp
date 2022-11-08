@@ -3,7 +3,7 @@
 //#include "glad/glad.h"
 //#include "Rendering/Renderer2D.h"
 
-//TODO:DELETE
+//TODO:DELETE. For testing only
 #include "Xperrty/Time/Timer.h"
 #include "Xperrty/Testing/Test.h"
 #include "stb_image.h"
@@ -31,13 +31,14 @@ namespace Xperrty {
 	}
 	void Application::run() {
 		std::cout << "RUN!" << std::endl;
+		int batchSize = 200000;
 		Timer<Application> timer(5000.0f, -1, this, &Application::onTimerDone);
 		//Texture* t = new Texture("E:\\Projects\\Git\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
 		//Shader* shader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
 		Texture* t = new Texture("D:\\Performance 4\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
-		Shader* shader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
-		ObjectPool<GameObject> objectPool(2000);
-		ObjectPool<Material> materialPool(2000);
+		Shader* shader = Shader::getShader("D:\\Performance 4\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
+		ObjectPool<GameObject> objectPool(batchSize);
+		ObjectPool<Material> materialPool(batchSize);
 		//Texture* t = new Texture("D:\\Performance 4\\Xperrty-Engine\\Sandbox\\assets\\images\\Cpu.png");
 		t->uploadToGpu();
 		//Test test;
@@ -50,9 +51,9 @@ namespace Xperrty {
 		//Material* material = new Material(shader, t, go);
 		//go->setMaterial(material);
 		//Array<GameObject*> objects;
-		Batch batch(new Material(shader,t,nullptr),2000);
+		Batch batch(new Material(shader,t,nullptr), batchSize);
 		//objects.reserve(2000);
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < batchSize; i++)
 		{
 			GameObject* go = objectPool.newObject();
 			Material* material =materialPool.newObject(shader, t, go);
@@ -60,16 +61,16 @@ namespace Xperrty {
 			go->setAnchorX(0);
 			go->setAnchorY(0);
 			material->setVerticesMemLocation((MaterialVertexData*)(batch.getBufferData().getVertex(i)));
-			//go->setX((i%10) * 100);
-			//go->setX(i%100 * 10);
-			go->setX(i*300);
-			go->setY(i*50);
+			go->setX((i%1000) * 100);
+			go->setY(i/1000 * 100);
+			//go->setX(i*300);
+			//go->setY(i*50);
 			//go->setY(i/10 * 100);
-			//go->setScaleX(0.1);
-			//go->setScaleY(0.1);
+			go->setScaleX(0.1);
+			go->setScaleY(0.1);
 			batch.insertObject(i,go);
 			go->updateTransform();
-			if (i == 10) {
+			if (i % 5 ==0) {
 				material->bl->colors[0] = 1;
 				material->bl->colors[1] = 0;
 				material->bl->colors[2] = 0;
@@ -81,11 +82,37 @@ namespace Xperrty {
 			}
 			material->updateVertices();
 			//if (i == 500) {
-				XP_INFO("BL {0},{1} BR{2},{3} TR{4},{5} TL{6},{7}", material->bl->position[0], material->bl->position[1], material->br->position[0], material->br->position[1], material->tr->position[0], material->tr->position[1], material->tl->position[0], material->tl->position[1]);
+				//XP_INFO("BL {0},{1} BR{2},{3} TR{4},{5} TL{6},{7}", material->bl->position[0], material->bl->position[1], material->br->position[0], material->br->position[1], material->tr->position[0], material->tr->position[1], material->tl->position[0], material->tl->position[1]);
 				
 			//}
 			//XP_INFO("A{0} B{1} C{2} D{3} TX{4} TY{5}", go->getWorldTransformMatrix().getA(), go->getWorldTransformMatrix().getB(), go->getWorldTransformMatrix().getC(), go->getWorldTransformMatrix().getD(), go->getWorldTransformMatrix().getTx(), go->getWorldTransformMatrix().getTy());
 		}
+		/*float* mem = (float*)(batch.getBufferData().getVertex(0));
+		for (int i = 0; i < 2; i++)
+		{
+			XP_INFO("-----------------------------------------------------------------");
+			float* cMem = i * 10*4 + mem;
+			XP_INFO("V1 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem[0], cMem[1], cMem[2], cMem[3], cMem[4], cMem[5], cMem[6], cMem[7], cMem[8], cMem[9]);
+			cMem = cMem + 10;
+			XP_INFO("V2 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem[0], cMem[1], cMem[2], cMem[3], cMem[4], cMem[5], cMem[6], cMem[7], cMem[8], cMem[9]);
+			cMem = cMem + 10;
+			XP_INFO("V3 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem[0], cMem[1], cMem[2], cMem[3], cMem[4], cMem[5], cMem[6], cMem[7], cMem[8], cMem[9]);
+			cMem = cMem + 10;
+			XP_INFO("V4 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem[0], cMem[1], cMem[2], cMem[3], cMem[4], cMem[5], cMem[6], cMem[7], cMem[8], cMem[9]);
+		}*/
+		//MaterialVertexData* memVertex = (MaterialVertexData*)(batch.getBufferData().getVertex(0));
+		/*for (int i = 0; i < 2; i++)
+		{
+			XP_INFO("-----------------------------------------------------------------");
+			MaterialVertexData* cMem = (MaterialVertexData*)(batch.getBufferData().getVertex(i));
+			XP_INFO("V1 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem->position[0], cMem->position[1], cMem->UV[0], cMem->UV[1], cMem->UV[2], cMem->colors[0], cMem->colors[1], cMem->colors[2], cMem->colors[3], cMem->alpha);
+			cMem = cMem + 1;
+			XP_INFO("V2 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem->position[0], cMem->position[1], cMem->UV[0], cMem->UV[1], cMem->UV[2], cMem->colors[0], cMem->colors[1], cMem->colors[2], cMem->colors[3], cMem->alpha);
+			cMem = cMem + 1;
+			XP_INFO("V3 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem->position[0], cMem->position[1], cMem->UV[0], cMem->UV[1], cMem->UV[2], cMem->colors[0], cMem->colors[1], cMem->colors[2], cMem->colors[3], cMem->alpha);
+			cMem = cMem + 1;
+			XP_INFO("V4 -> P: {0},{1} T: {2},{3},{4} C:{5},{6},{7},{8}, A:{9}", cMem->position[0], cMem->position[1], cMem->UV[0], cMem->UV[1], cMem->UV[2], cMem->colors[0], cMem->colors[1], cMem->colors[2], cMem->colors[3], cMem->alpha);
+		}*/
 		XP_INFO("Batch size:{0} Vert Size: {1}", batch.size(), sizeof(MaterialVertexData));
 		//batch.
 		while (isRunning)

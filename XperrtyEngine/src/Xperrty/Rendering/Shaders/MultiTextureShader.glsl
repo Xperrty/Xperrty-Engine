@@ -1,6 +1,6 @@
 //<Vertex>
 #version 450 core
-uniform vec2 uResolution;
+//uniform vec2 uResolution;
 uniform vec2 uProjectionVector;
 uniform vec3 uCameraPosition;
 layout(location = 0) in vec2 aPosition;

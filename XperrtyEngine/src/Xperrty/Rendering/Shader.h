@@ -15,6 +15,8 @@ namespace Xperrty {
 		void setUniform3f(unsigned int location, float a, float b, float c);
 		void setUniform4f(unsigned int location, float a, float b, float c, float d);
 
+		//ToDo:Add other uniform functions when needed
+
 		void initAttributesForBuffer();
 
 		inline virtual unsigned int getVertSize() { return 10 * sizeof(float); }

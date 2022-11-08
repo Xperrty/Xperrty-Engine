@@ -13,7 +13,6 @@ namespace Xperrty {
 		void renderBatch(Batch& batch);
 
 		void renderQuadImmediate(Rect bounds, Shader* shader, Texture* texture, const Color& color);
-		void batchRenderQuadImmediate(Rect bounds, Shader* shader, Texture* texture, const Color& color,int count);
 
 		~Renderer2D();
 

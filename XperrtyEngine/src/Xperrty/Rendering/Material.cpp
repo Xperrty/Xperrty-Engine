@@ -15,12 +15,12 @@ namespace Xperrty {
 	}
 
 	void Material::uploadUniforms() {
-		auto resolutionLocation = shader->getUniformLocation("uResolution");
+		//auto resolutionLocation = shader->getUniformLocation("uResolution");
 		auto projectionLocation = shader->getUniformLocation("uProjectionVector");
 		auto cameraPositionLocation = shader->getUniformLocation("uCameraPosition");
 		Window* window = Window::instance;
 		Camera* camera = Camera::getActiveCamera();
-		shader->setUniform2f(resolutionLocation, window->getWidth(), window->getHeight());
+		//shader->setUniform2f(resolutionLocation, window->getWidth(), window->getHeight());
 		shader->setUniform2f(projectionLocation, window->getWidth() / 2, -window->getHeight() / 2);
 		shader->setUniform3f(cameraPositionLocation, camera->getBounds().getX(), camera->getBounds().getY(), camera->getScale());
 	}
@@ -50,6 +50,7 @@ namespace Xperrty {
 		float ty = wt.getTy();
 		int texId = 0;
 
+		//ToDo: Instantiate the data
 		bl = new(memLocation + 0) MaterialVertexData(a * w1 + c * h0 + tx, d * h0 + b * w1 + ty, uvs[0], uvs[1], gameObject->getWorldAlpha(), texId);
 		br = new(memLocation + 1) MaterialVertexData(a * w0 + c * h0 + tx, d * h0 + b * w0 + ty, uvs[2], uvs[3], gameObject->getWorldAlpha(), texId);
 		tr = new(memLocation + 2) MaterialVertexData(a * w0 + c * h1 + tx, d * h1 + b * w0 + ty, uvs[4], uvs[5], gameObject->getWorldAlpha(), texId);

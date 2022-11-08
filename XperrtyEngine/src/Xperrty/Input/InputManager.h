@@ -5,20 +5,30 @@ namespace Xperrty {
 	class InputManager
 	{
 	public:
+		//Returns the last mouse X position.
 		inline static float getX() { return x; }
+		//Returns the last mouse Y position.
 		inline static float geY() { return y; }
+		//Returns the last Scroll X value.
 		inline static float getScrollX() { return scrollX; }
+		//Returns the last Scroll Y value.
 		inline static float getScrollY() { return scrollY; }
+		/// <summary>
+		/// Checks if key was down this frame or at some point in the past.
+		/// </summary>
+		/// <param name="code">Key to check.</param>
+		/// <param name="timeInThePast">Time interval in the past. If 0, checks only the current frame.</param>
+		/// <returns></returns>
 		static inline bool isKeyDown(KeyCodes code, float timeInThePast = 0)
 		{
 			float lastDown;
 			float lastUp;
 			if (downKeyMap.tryGet(code, lastDown) && upKeyMap.tryGet(code, lastUp)) {
-				//XP_INFO("LastPressed {0} Now {1} timeInThePast {2} diff {3}", lastPressed, Time::now(), timeInThePast, Time::now() - lastPressed);
 				return lastDown>lastUp;
 			}
 			return downKeyMap.contains(code);
 		}
+		//Update the input system.
 		static void update();
 	private:
 		static float x;
@@ -43,7 +53,8 @@ namespace Xperrty {
 
 	struct InputInteraction {
 		InputInteraction() : keyCode(KEY_A), mouseCode(MOUSE_BUTTON_1), scrollValue(0), action(Down) {}
-		InputInteraction(const InputInteraction& other) { XP_WARN("Trying to copy input interaction!!"); }
+		//InputInteraction(const InputInteraction& other) = delete;
+		//InputInteraction(InputInteraction& other) = delete;
 		KeyCodes keyCode;
 		MouseCodes mouseCode;
 		float scrollValue;

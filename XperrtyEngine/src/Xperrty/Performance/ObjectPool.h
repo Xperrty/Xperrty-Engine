@@ -5,10 +5,10 @@ class ObjectPool
 {
 public:
 	ObjectPool(int chunkSize) :chunkSize(chunkSize), lastPointer(0) {
-		//TODO: Check if fragmentation breaks the pool.... Micro optimization.
+		//TODO: Check if fragmentation breaks the pool performance.... Micro optimization.
 		//TODO: Implement chunk reduction if not needed.
 		freePositions.reserve(32);//2 cache lines 128/4
-		memoryChunks.reserve(8);
+		memoryChunks.reserve(2);
 		allocateNewChunk();
 	}
 	template<typename... Args>

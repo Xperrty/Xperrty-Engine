@@ -5,20 +5,20 @@
 namespace Xperrty {
 	BufferData::BufferData(unsigned int bufferSize, unsigned int vertexSize, Shader* shader) :bufferSize(bufferSize), vertexSize(vertexSize), vertexData(), indexData(), glVertexId(0), glIndexId(0), bufferByteSize(0)
 	{
-		XP_ERROR("Created Buffer Data! {0}", vertexSize);
 		bufferByteSize = bufferSize * vertexSize * 4;
+		XP_ERROR("Created Buffer Data! Vert size:{0} Buffer size: {1} Byte Buffer Size: {2}", vertexSize,bufferSize,bufferByteSize);
 		vertexData = (char*)malloc(bufferByteSize);
 		indexData.reserve(bufferSize * 6);
 
 		for (int i = 0; i < bufferSize; i++)
 		{
-			int i6 = i * 6;
-			indexData.push_back(i6 + 0);
-			indexData.push_back(i6 + 1);
-			indexData.push_back(i6 + 2);
-			indexData.push_back(i6 + 2);
-			indexData.push_back(i6 + 3);
-			indexData.push_back(i6 + 0);
+			int i4 = i * 4;
+			indexData.push_back(i4 + 0);
+			indexData.push_back(i4 + 1);
+			indexData.push_back(i4 + 2);
+			indexData.push_back(i4 + 2);
+			indexData.push_back(i4 + 3);
+			indexData.push_back(i4 + 0);
 		}
 		//Generating Buffers
 		glGenVertexArrays(1, &glVAOId);
@@ -31,7 +31,7 @@ namespace Xperrty {
 		glGenBuffers(1, &glIndexId);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize * sizeof(int) * 6, indexData.data(), GL_DYNAMIC_DRAW);
-
+		this->shader = shader;
 		//Setting up Attribs
 		shader->initAttributesForBuffer();
 		//vec2 i_position;
@@ -43,9 +43,13 @@ namespace Xperrty {
 	void BufferData::uploadData() {
 		//Bind vertex Buffer
 		glBindVertexArray(glVAOId);
+		//shader->initAttributesForBuffer();
 		//glBindBuffer(GL_ARRAY_BUFFER, glVertexId);
-		glBufferData(GL_ARRAY_BUFFER, bufferByteSize, vertexData, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, bufferByteSize, getVertex(0), GL_DYNAMIC_DRAW);
+		//glBufferSubData(GL_ARRAY_BUFFER,0, bufferByteSize, getVertex(0));
 
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
+		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize * sizeof(int) * 6, indexData.data(), GL_DYNAMIC_DRAW);
 		//Bind index buffer.
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
 		//No point reuploading data... We use 6 indices every time for a sprite.
