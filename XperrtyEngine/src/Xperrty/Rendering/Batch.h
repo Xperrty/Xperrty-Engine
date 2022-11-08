@@ -5,8 +5,8 @@
 namespace Xperrty {
 	class Batch {
 	public:
-		Batch(Material* material) :gameObjects(), bd(500, material->getVertexSize(),material->getShader()) {
-			gameObjects.reserve(500);
+		Batch(Material* material,int size) :gameObjects(), bd(size, material->getVertexSize(),material->getShader()) {
+			gameObjects.reserve(size);
 		}
 		void insertObject(int index, GameObject* object);
 

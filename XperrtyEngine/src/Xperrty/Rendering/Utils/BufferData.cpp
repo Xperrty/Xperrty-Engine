@@ -5,6 +5,7 @@
 namespace Xperrty {
 	BufferData::BufferData(unsigned int bufferSize, unsigned int vertexSize, Shader* shader) :bufferSize(bufferSize), vertexSize(vertexSize), vertexData(), indexData(), glVertexId(0), glIndexId(0), bufferByteSize(0)
 	{
+		XP_ERROR("Created Buffer Data! {0}", vertexSize);
 		bufferByteSize = bufferSize * vertexSize * 4;
 		vertexData = (char*)malloc(bufferByteSize);
 		indexData.reserve(bufferSize * 6);
@@ -41,11 +42,12 @@ namespace Xperrty {
 
 	void BufferData::uploadData() {
 		//Bind vertex Buffer
-		glBindBuffer(GL_ARRAY_BUFFER, glVertexId);
-		glBufferData(GL_ARRAY_BUFFER, bufferByteSize, &vertexData, GL_DYNAMIC_DRAW);
+		glBindVertexArray(glVAOId);
+		//glBindBuffer(GL_ARRAY_BUFFER, glVertexId);
+		glBufferData(GL_ARRAY_BUFFER, bufferByteSize, vertexData, GL_DYNAMIC_DRAW);
 
 		//Bind index buffer.
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
 		//No point reuploading data... We use 6 indices every time for a sprite.
 	}
 

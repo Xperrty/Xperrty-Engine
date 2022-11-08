@@ -4,13 +4,14 @@
 #include "Xperrty/Math/Rect.h"
 #include "Cameras/Camera.h"
 #include "glad/glad.h"
+#include <filesystem>
 //#include ""
 static void GLClearError() {
 	while (glGetError() != GL_NO_ERROR);
 }
 static void GLCheckError() {
 	while (unsigned int error = glGetError()) {
-		XP_ERROR("Webgl Error {0}", error);
+		XP_ERROR("OPENGL Error {0}", error);
 	}
 }
 namespace Xperrty {
@@ -19,8 +20,8 @@ namespace Xperrty {
 	Renderer2D::Renderer2D() :immediate_VAO(0), immediate_indexBuffer(0), immediate_vertBuffer(0)
 	{
 		//ToDo:Please remove this...
-		//activeShader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
-		activeShader = Shader::getShader("D:\\Performance 4\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
+		activeShader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
+		//activeShader = Shader::getShader(std::filesystem::current_path().string() + "\\..\\..\\..\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
 		instance = this;
 		activeShader->initOpenGl();
 		generateImmediatBuffers();//DEBUG
@@ -43,11 +44,16 @@ namespace Xperrty {
 		lastUsedShader->bind();
 		batch.getMaterial()->uploadUniforms();
 		BufferData& buffer = batch.getBufferData();
+		buffer.uploadData();
+
+		glDrawElements(GL_TRIANGLES, batch.size()*6, GL_UNSIGNED_INT, nullptr);
+		//batch.
 		//glBindVertexArray(buffer.)
 	}
 
 	void Renderer2D::renderQuadImmediate(Rect bounds, Shader* shader, Texture* texture, const Color& color)
 	{
+		GLClearError();
 		//ToDo: Remove all this, it is testing code!
 		float vertices[40]{
 			bounds.getX(),bounds.getBot(),0,0,0, color.getComponents()[0], color.getComponents()[1], color.getComponents()[2], color.getComponents()[3],1,
@@ -64,19 +70,19 @@ namespace Xperrty {
 		glBindBuffer(GL_ARRAY_BUFFER, immediate_vertBuffer);
 
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 32, vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 40, vertices, GL_DYNAMIC_DRAW);
 		//glBindTe
 
 		activeShader->initAttributesForBuffer();
-		glUniform2f(glGetUniformLocation(activeShader->getShaderId(), "u_resolution"), Window::instance->getWidth(), Window::instance->getHeight());
-		glUniform2f(glGetUniformLocation(activeShader->getShaderId(), "u_projectionVector"), Window::instance->getWidth()/2, -Window::instance->getHeight()/2);
-		glUniform3f(glGetUniformLocation(activeShader->getShaderId(),"u_cameraPosition"), Camera::getActiveCamera()->getBounds().getX(), Camera::getActiveCamera()->getBounds().getY(), Camera::getActiveCamera()->getScale());
+		glUniform2f(glGetUniformLocation(activeShader->getShaderId(), ("uResolution")), Window::instance->getWidth(), Window::instance->getHeight());
+		glUniform2f(glGetUniformLocation(activeShader->getShaderId(), ("uProjectionVector")), Window::instance->getWidth() / 2, -Window::instance->getHeight() / 2);
+		glUniform3f(glGetUniformLocation(activeShader->getShaderId(), ("uCameraPosition")), Camera::getActiveCamera()->getBounds().getX(), Camera::getActiveCamera()->getBounds().getY(), Camera::getActiveCamera()->getScale());
 
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, indices, GL_DYNAMIC_DRAW);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
-
+		GLCheckError();
 		//GLCheckError();
 	}
 

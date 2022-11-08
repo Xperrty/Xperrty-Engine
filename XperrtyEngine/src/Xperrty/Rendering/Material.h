@@ -26,15 +26,16 @@ namespace Xperrty {
 		void uploadUniforms();
 		inline int getVertexSize() const { return sizeof(MaterialVertexData); }
 		inline Shader* getShader() { return shader; }
+		MaterialVertexData* bl;
+		MaterialVertexData* br;
+		MaterialVertexData* tr;
+		MaterialVertexData* tl;
 	private:
 		Shader* shader;
 		Texture* texture;
 		GameObject* gameObject;
 		MaterialVertexData* memLocation;
-		MaterialVertexData* bl;
-		MaterialVertexData* br;
-		MaterialVertexData* tr;
-		MaterialVertexData* tl;
+		
 	};
 
 

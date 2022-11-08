@@ -15,9 +15,9 @@ namespace Xperrty {
 	}
 
 	void Material::uploadUniforms() {
-		auto resolutionLocation = shader->getUniformLocation("u_resolution");
-		auto projectionLocation = shader->getUniformLocation("u_projectionVector");
-		auto cameraPositionLocation = shader->getUniformLocation("u_cameraPosition");
+		auto resolutionLocation = shader->getUniformLocation("uResolution");
+		auto projectionLocation = shader->getUniformLocation("uProjectionVector");
+		auto cameraPositionLocation = shader->getUniformLocation("uCameraPosition");
 		Window* window = Window::instance;
 		Camera* camera = Camera::getActiveCamera();
 		shader->setUniform2f(resolutionLocation, window->getWidth(), window->getHeight());

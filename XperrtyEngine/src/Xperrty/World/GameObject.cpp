@@ -17,7 +17,7 @@ namespace Xperrty {
 	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle) :GameObject(name, position, scale, angle, Vector2(0.5f, 0.5f))
 	{
 	}
-	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle, const Vector2& anchor) :name(name), position(position), scale(scale), angle(angle), rotation(toRadians(angle)), alpha(1), anchor(anchor), transformChanged(true), visible(false), transformMatrix(scale.x, 0, 0, scale.y, position.x, position.x), worldAlpha(1), parent(nullptr), children(), components(), material(nullptr)
+	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle, const Vector2& anchor) :name(name), position(position), scale(scale), angle(angle), rotation(toRadians(angle)), alpha(1), anchor(anchor), transformChanged(true), visible(false), transformMatrix(scale.x, 0, 0, scale.y, position.x, position.y), worldAlpha(1), parent(nullptr), children(), components(), material(nullptr)
 	{
 	}
 	void GameObject::updateTransform()
@@ -30,8 +30,8 @@ namespace Xperrty {
 		float b = sr * scale.x;
 		float c = -sr * scale.y;
 		float d = cr * scale.y;
-		float& tx = position.x;
-		float& ty = position.y;
+		float tx = position.x;
+		float ty = position.y;
 		//if (anchor.x || anchor.y) {
 		tx -= anchor.x * a + anchor.y * c;
 		ty -= anchor.x * b + anchor.y * d;

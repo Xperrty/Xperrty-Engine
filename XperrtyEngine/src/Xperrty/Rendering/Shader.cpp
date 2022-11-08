@@ -3,7 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include "glad/glad.h"
-
+static void GLCheckError() {
+	while (unsigned int error = glGetError()) {
+		XP_ERROR("OPENGL Error {0}", error);
+	}
+}
 namespace Xperrty {
 	Shader::Shader(const std::string& shaderSrc) :shaderSrc(shaderSrc), vertSrc(), fragSrc(), shaderType("Shader"), shaderId(-1), uniformLocations()
 	{
@@ -74,26 +78,26 @@ namespace Xperrty {
 
 	//Initializes the attributes for the currently bound buffer.
 	void Shader::initAttributesForBuffer() {
-		unsigned int aPosition = glGetAttribLocation(shaderId, "aPosition");//2 floats
-		unsigned int aTextureCoords = glGetAttribLocation(shaderId, "aTextureCoords");// 2 floats
-		unsigned int aColor = glGetAttribLocation(shaderId, "aColor");//4 floats
-		unsigned int aAlpha = glGetAttribLocation(shaderId, "aAlpha");//1 float
+		int aPosition = glGetAttribLocation(shaderId, "aPosition");//2 floats
+		int aTextureCoords = glGetAttribLocation(shaderId, "aTextureCoords");// 3 floats
+		int aColor = glGetAttribLocation(shaderId, "aColor");//4 floats
+		int aAlpha = glGetAttribLocation(shaderId, "aAlpha");//1 float
 
 		unsigned int positionOffset = 0;//0								->2 floats
-		unsigned int textureCoordsOffset = 2 * sizeof(float);//0 + 2	->2 floats
-		unsigned int colorOffset = 4 * sizeof(float);//2 + 2			->4 floats
-		unsigned int alphaOffset = 8 * sizeof(float);//4+4				->1 float
+		unsigned int textureCoordsOffset = 2 * sizeof(float);//0 + 2	->3 floats
+		unsigned int colorOffset = 5 * sizeof(float);//2 + 3			->4 floats
+		unsigned int alphaOffset = 9 * sizeof(float);//5+4				->1 float
 
-		unsigned int stride = getVertSize() * 4;
-		glEnableVertexAttribArray(aPosition);
-		glEnableVertexAttribArray(aTextureCoords);
-		glEnableVertexAttribArray(aColor);
-		glEnableVertexAttribArray(aAlpha);
+		unsigned int stride = getVertSize();
+		if (aPosition != -1)glEnableVertexAttribArray(aPosition);
+		if (aTextureCoords != -1)glEnableVertexAttribArray(aTextureCoords);
+		if (aColor != -1)glEnableVertexAttribArray(aColor);
+		if (aAlpha != -1)glEnableVertexAttribArray(aAlpha);
 
-		glVertexAttribPointer(aPosition, 2, GL_FLOAT, false, stride, (void*)positionOffset);
-		glVertexAttribPointer(aTextureCoords, 4, GL_FLOAT, false, stride, (void*)textureCoordsOffset);
-		glVertexAttribPointer(aColor, 4, GL_FLOAT, false, stride, (void*)colorOffset);
-		glVertexAttribPointer(aAlpha, 4, GL_FLOAT, false, stride, (void*)alphaOffset);
+		if (aPosition != -1)glVertexAttribPointer(aPosition, 2, GL_FLOAT, false, stride, (void*)positionOffset);
+		if (aTextureCoords != -1)glVertexAttribPointer(aTextureCoords, 3, GL_FLOAT, false, stride, (void*)textureCoordsOffset);
+		if (aColor != -1)glVertexAttribPointer(aColor, 4, GL_FLOAT, false, stride, (void*)colorOffset);
+		if (aAlpha != -1)glVertexAttribPointer(aAlpha,1, GL_FLOAT, false, stride, (void*)alphaOffset);
 	}
 
 	void Shader::unbind() {
@@ -103,7 +107,7 @@ namespace Xperrty {
 
 	void Shader::setUniform1f(unsigned int location, float a)
 	{
-		 glUniform1f(location, a); 
+		glUniform1f(location, a);
 	}
 
 	void Shader::setUniform2f(unsigned int location, float a, float b)

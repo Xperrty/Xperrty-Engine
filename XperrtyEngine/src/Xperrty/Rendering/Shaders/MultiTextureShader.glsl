@@ -24,6 +24,6 @@ in vec3 vTextureCoords;
 uniform sampler2DArray uSampler;
 out vec4 color;
 void main(){
-    color = texture(uSampler,vTextureCoords);
+    color = texture(uSampler,vTextureCoords.xyz)*vColor;
     //color = vec4(1.0,0.0,0.0,1.0);
 }
