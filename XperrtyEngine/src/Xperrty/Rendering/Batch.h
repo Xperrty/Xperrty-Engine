@@ -7,6 +7,7 @@ namespace Xperrty {
 	public:
 		Batch(Material* material, int size);
 		void insertObject(int index, GameObject* object);
+		//ToDo: Remove, testing code
 		void updateTransforms();
 
 		inline BufferData& getBufferData() { return bd; }
@@ -16,8 +17,9 @@ namespace Xperrty {
 		}
 		inline int size()const { return gameObjects.size(); }
 		~Batch();
-	private:
 		Array<GameObject*> gameObjects;
+		bool done;
+	private:
 		BufferData bd;
 	};
 

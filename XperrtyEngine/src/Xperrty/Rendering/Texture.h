@@ -11,6 +11,7 @@ namespace Xperrty {
 
 		inline int getWidth() { return width; }
 		inline int getHeight() { return height; }
+		inline int getId() { return id; }
 		inline unsigned char* getPixels() { return pixels; }
 		inline unsigned int getTextureId() { return texId; }
 		inline float* getUVs() { return uvs; }
@@ -23,8 +24,11 @@ namespace Xperrty {
 		int width;
 		int height;
 		int channels;
+		int id;
 		float uvs[8];
 		unsigned int texId;
+		//ToDo:remove, temporary use.
+		static int globalId;
 		bool isPixelMemoryFree;
 		//for now it's single threaded...
 		void loadTexture(const std::string& path);

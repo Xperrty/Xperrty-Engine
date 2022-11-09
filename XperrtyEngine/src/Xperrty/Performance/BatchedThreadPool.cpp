@@ -4,7 +4,7 @@
 namespace Xperrty {
 	//Creates A batched Thread pool. Must use start and waitAll otherwise functions will not be called.
 
-	inline BatchedThreadPool::BatchedThreadPool(int cores) :threadCount(cores), done(false), activeThreads(threadCount), index(0) {
+	 BatchedThreadPool::BatchedThreadPool(int cores) :threadCount(cores), done(false), activeThreads(threadCount), index(0) {
 		callbacks.reserve(2000);
 		threads.reserve(threadCount);
 		for (int i = 0; i < threadCount; i++)
@@ -14,7 +14,7 @@ namespace Xperrty {
 		}
 		waitAll();
 	}
-	inline void BatchedThreadPool::start() {
+	void BatchedThreadPool::start() {
 		std::lock_guard<std::mutex> startWorkGuard(startWorkMutex);
 		activeThreads = threadCount;
 		index = 0;
@@ -25,13 +25,13 @@ namespace Xperrty {
 		}
 		startWorkCond.notify_all();
 	}
-	inline void BatchedThreadPool::waitAll() {
+	void BatchedThreadPool::waitAll() {
 		std::unique_lock<std::mutex> waitLock(waitMutex);
 		if (activeThreads != 0 || callbacks.size() != 0) {
 			waitCond.wait(waitLock, [&, this] {return activeThreads == 0 && callbacks.size() == 0; });
 		}
 	}
-	inline BatchedThreadPool::~BatchedThreadPool() {
+	BatchedThreadPool::~BatchedThreadPool() {
 		done = true;
 		start();
 		for (int i = 0; i < threadCount; i++)

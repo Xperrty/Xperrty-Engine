@@ -46,7 +46,7 @@ namespace Xperrty {
 		static Array<std::pair<KeyCodes, InputActions>> keyActionsList;
 		static Array<std::pair<MouseCodes, InputActions>> mouseActionsList;
 		static InputInteractionEventData* inputActionEventData;
-
+		//ToDo: If input is pressed and released in the same frame, the press doesn't register.
 		static void processKeyboardEvents();
 		static void processMouseEvents();
 	};

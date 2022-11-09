@@ -33,6 +33,7 @@ namespace Xperrty {
 
 	}
 	void Renderer2D::renderBatch(Batch& batch) {
+		GLClearError();
 		Shader* batchShader = batch.getMaterial()->getShader();
 		if (batchShader == lastUsedShader) {
 
@@ -45,10 +46,13 @@ namespace Xperrty {
 		BufferData& buffer = batch.getBufferData();
 		buffer.uploadData();
 
+		{
 
 		glDrawElements(GL_TRIANGLES, batch.size() * 6, GL_UNSIGNED_INT, nullptr);
+		}
 		//batch.
 		//glBindVertexArray(buffer.)
+		GLCheckError();
 	}
 
 	void Renderer2D::renderQuadImmediate(Rect bounds, Shader* shader, Texture* texture, const Color& color)

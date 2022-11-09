@@ -44,7 +44,7 @@ namespace Xperrty {
 		//Bind vertex Buffer
 		glBindVertexArray(glVAOId);
 		//shader->initAttributesForBuffer();
-		//glBindBuffer(GL_ARRAY_BUFFER, glVertexId);
+		glBindBuffer(GL_ARRAY_BUFFER, glVertexId);
 
 		//void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		//memcpy(ptr,getVertex(0),bufferByteSize);
@@ -53,8 +53,8 @@ namespace Xperrty {
 		//glBufferData(GL_ARRAY_BUFFER, bufferByteSize, getVertex(0), GL_DYNAMIC_DRAW);
 		glBufferSubData(GL_ARRAY_BUFFER,0, bufferByteSize, getVertex(0));
 
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
-		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize * sizeof(int) * 6, indexData.data(), GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize * sizeof(int) * 6, indexData.data(), GL_DYNAMIC_DRAW);
 		//Bind index buffer.
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
 		//No point reuploading data... We use 6 indices every time for a sprite.

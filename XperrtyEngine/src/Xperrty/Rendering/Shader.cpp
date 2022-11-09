@@ -80,24 +80,35 @@ namespace Xperrty {
 	void Shader::initAttributesForBuffer() {
 		int aPosition = glGetAttribLocation(shaderId, "aPosition");//2 floats
 		int aTextureCoords = glGetAttribLocation(shaderId, "aTextureCoords");// 3 floats
+		int aTextureId = glGetAttribLocation(shaderId, "aTextureId");// 3 floats
 		int aColor = glGetAttribLocation(shaderId, "aColor");//4 floats
 		int aAlpha = glGetAttribLocation(shaderId, "aAlpha");//1 float
 
+		XP_INFO("Pos{0} TCoord{1} TId{2} C{3} A{4}", aPosition, aTextureCoords, aTextureId, aColor, aAlpha);
+
 		unsigned int positionOffset = 0;//0								->2 floats
 		unsigned int textureCoordsOffset = 2 * sizeof(float);//0 + 2	->3 floats
-		unsigned int colorOffset = 5 * sizeof(float);//2 + 3			->4 floats
-		unsigned int alphaOffset = 9 * sizeof(float);//5+4				->1 float
+		unsigned int aTextureIdOffset = 4 * sizeof(float);//0 + 2		->3 floats
+		unsigned int colorOffset = 4 * sizeof(float) + sizeof(int);//2 + 3			->4 floats
+		unsigned int alphaOffset = 8 * sizeof(float) + sizeof(int);//5+4				->1 float
 
 		unsigned int stride = getVertSize();
 		if (aPosition != -1)glEnableVertexAttribArray(aPosition);
 		if (aTextureCoords != -1)glEnableVertexAttribArray(aTextureCoords);
+		if (aTextureId != -1)glEnableVertexAttribArray(aTextureId);
 		if (aColor != -1)glEnableVertexAttribArray(aColor);
 		if (aAlpha != -1)glEnableVertexAttribArray(aAlpha);
-		stride = 40;
+		//stride = 40;
 		if (aPosition != -1)glVertexAttribPointer(aPosition, 2, GL_FLOAT, false, stride, (void*)positionOffset);
-		if (aTextureCoords != -1)glVertexAttribPointer(aTextureCoords, 3, GL_FLOAT, false, stride, (void*)textureCoordsOffset);
+		if (aTextureCoords != -1)glVertexAttribPointer(aTextureCoords, 2, GL_FLOAT, false, stride, (void*)textureCoordsOffset);
+		if (aTextureId != -1)glVertexAttribPointer(aTextureId, 1, GL_FLOAT, false, stride, (void*)aTextureIdOffset);
 		if (aColor != -1)glVertexAttribPointer(aColor, 4, GL_FLOAT, false, stride, (void*)colorOffset);
 		if (aAlpha != -1)glVertexAttribPointer(aAlpha,1, GL_FLOAT, false, stride, (void*)alphaOffset);
+		int samplers[16] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler1"), 0);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler2"), 1);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler3"), 2);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler4"), 3);
 	}
 
 	void Shader::unbind() {

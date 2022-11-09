@@ -7,12 +7,13 @@ namespace Xperrty {
 	class GameObject;
 	struct MaterialVertexData {
 		float position[2];
-		float UV[3];
+		float UV[2];
+		float textureId;
 		float colors[4];
 		float alpha;
-		MaterialVertexData() :position{ 0,0 }, UV{ 0,0,0 }, colors{ 1,1,1,1 }, alpha(1) {}
+		MaterialVertexData() :position{ 0,0 }, UV{ 0,0 }, textureId(0), colors{1,1,1,1}, alpha(1) {}
 		//ToDO:Add constructor for colors as well...
-		MaterialVertexData(float x, float y, float u, float v, float alpha, int texId) :position{ x,y }, UV{ u,v,(float)texId }, colors{ 1,1,1,1 }, alpha(alpha) {}
+		MaterialVertexData(float x, float y, float u, float v, float alpha, int texId) :position{ x,y }, UV{ u,v },textureId(texId), colors{ 1,1,1,1 }, alpha(alpha) {}
 	};
 	class Material
 	{
