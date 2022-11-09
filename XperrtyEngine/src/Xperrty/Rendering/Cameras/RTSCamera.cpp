@@ -17,15 +17,16 @@ namespace Xperrty {
 	}
 	void RTSCamera::update()
 	{
-		if (InputManager::isKeyDown(KEY_A)) bounds.setX(bounds.getX() - Time::dt() * speed);
-		if (InputManager::isKeyDown(KEY_D))bounds.setX(bounds.getX() + Time::dt() * speed);
-		if (InputManager::isKeyDown(KEY_W))bounds.setY(bounds.getY() - Time::dt() * speed);
-		if (InputManager::isKeyDown(KEY_S))bounds.setY(bounds.getY() + Time::dt() * speed);
+		if (InputManager::isKeyDown(KEY_A)) bounds.setX(bounds.getX() - Time::dt() * speed *scale);
+		if (InputManager::isKeyDown(KEY_D))bounds.setX(bounds.getX() + Time::dt() * speed * scale);
+		if (InputManager::isKeyDown(KEY_W))bounds.setY(bounds.getY() - Time::dt() * speed * scale);
+		if (InputManager::isKeyDown(KEY_S))bounds.setY(bounds.getY() + Time::dt() * speed * scale);
 		if (InputManager::getScrollY()) {
 
 			//ToDo: smooth the scale... zoom in is way, way too abrupt
 			Camera* camera = Camera::getActiveCamera();
-			camera->setScale(camera->getScale() - InputManager::getScrollY() * 1000 * Time::dt());
+			//if(I)
+			camera->setScale(camera->getScale() - InputManager::getScrollY() * 0.5);
 			if (camera->getScale() < 0.2f) camera->setScale(0.2f);
 			if (camera->getScale() > 20.0f) camera->setScale(20.0f);
 		}

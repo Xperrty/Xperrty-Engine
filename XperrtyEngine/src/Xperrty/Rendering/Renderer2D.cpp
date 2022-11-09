@@ -20,9 +20,7 @@ namespace Xperrty {
 	Renderer2D::Renderer2D() :immediate_VAO(0), immediate_indexBuffer(0), immediate_vertBuffer(0)
 	{
 		//ToDo:Please remove this...
-		//activeShader = Shader::getShader("E:\\Projects\\Git\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
-		activeShader = Shader::getShader("D:\\Performance 4\\Xperrty-Engine\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
-		//activeShader = Shader::getShader(std::filesystem::current_path().string() + "\\..\\..\\..\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
+		activeShader = Shader::getShader(std::filesystem::current_path().string() + "\\..\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
 		instance = this;
 		activeShader->initOpenGl();
 		generateImmediatBuffers();//DEBUG
@@ -32,7 +30,7 @@ namespace Xperrty {
 		int maxTextures = 0;
 		glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxTextures);
 		XP_INFO("Texture slots available: {0}", maxTextures);
-		
+
 	}
 	void Renderer2D::renderBatch(Batch& batch) {
 		Shader* batchShader = batch.getMaterial()->getShader();
@@ -41,14 +39,14 @@ namespace Xperrty {
 		}
 		else {
 			lastUsedShader = batchShader;
+			lastUsedShader->bind();
 		}
-		lastUsedShader->bind();
 		batch.getMaterial()->uploadUniforms();
 		BufferData& buffer = batch.getBufferData();
 		buffer.uploadData();
 
 
-		glDrawElements(GL_TRIANGLES, batch.size()*6, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, batch.size() * 6, GL_UNSIGNED_INT, nullptr);
 		//batch.
 		//glBindVertexArray(buffer.)
 	}

@@ -6,7 +6,7 @@ namespace Xperrty {
 	BufferData::BufferData(unsigned int bufferSize, unsigned int vertexSize, Shader* shader) :bufferSize(bufferSize), vertexSize(vertexSize), vertexData(), indexData(), glVertexId(0), glIndexId(0), bufferByteSize(0)
 	{
 		bufferByteSize = bufferSize * vertexSize * 4;
-		XP_ERROR("Created Buffer Data! Vert size:{0} Buffer size: {1} Byte Buffer Size: {2}", vertexSize,bufferSize,bufferByteSize);
+		//XP_ERROR("Created Buffer Data! Vert size:{0} Buffer size: {1} Byte Buffer Size: {2}", vertexSize,bufferSize,bufferByteSize);
 		vertexData = (char*)malloc(bufferByteSize);
 		indexData.reserve(bufferSize * 6);
 
@@ -45,8 +45,13 @@ namespace Xperrty {
 		glBindVertexArray(glVAOId);
 		//shader->initAttributesForBuffer();
 		//glBindBuffer(GL_ARRAY_BUFFER, glVertexId);
-		glBufferData(GL_ARRAY_BUFFER, bufferByteSize, getVertex(0), GL_DYNAMIC_DRAW);
-		//glBufferSubData(GL_ARRAY_BUFFER,0, bufferByteSize, getVertex(0));
+
+		//void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		//memcpy(ptr,getVertex(0),bufferByteSize);
+		//glUnmapBuffer(GL_ARRAY_BUFFER);
+
+		//glBufferData(GL_ARRAY_BUFFER, bufferByteSize, getVertex(0), GL_DYNAMIC_DRAW);
+		glBufferSubData(GL_ARRAY_BUFFER,0, bufferByteSize, getVertex(0));
 
 		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glIndexId);
 		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize * sizeof(int) * 6, indexData.data(), GL_DYNAMIC_DRAW);
