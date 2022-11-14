@@ -30,8 +30,15 @@ namespace Xperrty {
 		int maxTextures = 0;
 		glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxTextures);
 		XP_INFO("Texture slots available: {0}", maxTextures);
+		EventManager::addEventListener(WINDOW_RESIZE, this);
 
 	}
+	void Renderer2D::onEngineEvent(Xperrty::EngineEventType eventNr, Xperrty::EventData* eventData) {
+		XP_INFO("HELLO RESIZE!");
+		glViewport(0, 0, Window::instance->getWidth(), Window::instance->getHeight());
+	}
+
+
 	void Renderer2D::renderBatch(Batch& batch) {
 		GLClearError();
 		Shader* batchShader = batch.getMaterial()->getShader();
@@ -48,7 +55,7 @@ namespace Xperrty {
 
 		{
 
-		glDrawElements(GL_TRIANGLES, batch.size() * 6, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, batch.size() * 6, GL_UNSIGNED_INT, nullptr);
 		}
 		//batch.
 		//glBindVertexArray(buffer.)
@@ -108,6 +115,11 @@ namespace Xperrty {
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	void Renderer2D::clear() {
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 }

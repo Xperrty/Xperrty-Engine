@@ -7,6 +7,7 @@ namespace Xperrty {
 		//TODO:Implement Texture manager...
 		//TODO:Implement off thread loading
 		Texture(const std::string& path);
+		Texture();
 
 
 		inline int getWidth() { return width; }
@@ -15,6 +16,9 @@ namespace Xperrty {
 		inline unsigned char* getPixels() { return pixels; }
 		inline unsigned int getTextureId() { return texId; }
 		inline float* getUVs() { return uvs; }
+
+		//ToDo: remove and replace with bounds for texture atlases.
+		inline void setUVs(float* newUvs) { memcpy(uvs, newUvs, 8 * sizeof(float)); }
 
 		//ToDo:remove all the opengl stuff...
 		void uploadToGpu();
@@ -32,6 +36,7 @@ namespace Xperrty {
 		bool isPixelMemoryFree;
 		//for now it's single threaded...
 		void loadTexture(const std::string& path);
+		friend class TextureManager;
 	};
 
 }

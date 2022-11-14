@@ -50,6 +50,7 @@ namespace Xperrty {
 		static void onMouseMoveEvent(GLFWwindow* window, double xpos, double ypos);
 		static void onMouseEvent(GLFWwindow* window, int button, int action, int mods);
 		static void onMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
+		static void onResizeCallback(GLFWwindow* window, int width, int height);
 	};
 
 

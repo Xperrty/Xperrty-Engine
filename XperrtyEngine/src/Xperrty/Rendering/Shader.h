@@ -1,6 +1,7 @@
 #pragma once
+#include <filesystem>
 namespace Xperrty {
-
+	//ToDo: Change shader instantiation. Each shader type should have its unique shader object file -> path defined in constructor.
 	class Shader
 	{
 	public:
@@ -26,6 +27,7 @@ namespace Xperrty {
 		static Shader* getShader(const std::string& shaderSrc);
 		//Always creates a new shader.
 		static  Shader* createShader(const std::string& shaderSrc);
+		inline static std::string getDefaultShaderPath() { return std::filesystem::current_path().string() + "\\..\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl"; }
 		~Shader();
 	protected:
 		Shader(const std::string& shaderSrc);

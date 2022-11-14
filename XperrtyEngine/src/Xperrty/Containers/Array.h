@@ -25,6 +25,12 @@ public:
 		}
 		return removedItems;
 	}
+
+	//Removes the element at index.
+	void removeAt(int index) {
+		if (index > size()) return;
+		erase(begin() + index);
+	}
 	/// <summary>
 	/// Checks if the item exists in the Array.
 	/// </summary>

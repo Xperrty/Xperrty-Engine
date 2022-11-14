@@ -26,6 +26,7 @@ namespace Xperrty {
 		void createVertices();
 		void uploadUniforms();
 		inline int getVertexSize() const { return sizeof(MaterialVertexData); }
+		inline Texture* getTexture() { return texture; }
 		inline Shader* getShader() { return shader; }
 		MaterialVertexData* bl;
 		MaterialVertexData* br;

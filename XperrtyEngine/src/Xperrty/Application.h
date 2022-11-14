@@ -18,6 +18,7 @@ namespace Xperrty {
 		Camera* mainCamera;
 		InputManager* input;
 		void onTimerDone(float extraTime);
+		virtual void init() = 0;
 		int updates;
 	public:
 		Application();

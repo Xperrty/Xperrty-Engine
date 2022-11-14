@@ -17,50 +17,88 @@ namespace Xperrty {
 
 		void updateTransform();
 
+		template <typename T>
+		T* addComponent() {
+			T* component = new T();
+			components.push_back(component);
+			component->setGameObject(this);
+			component->onAddedToObject();
+			return component;
+		}
+		//At the moment slow, cache the results!
+		template <typename T>
+		T* getComponent() {
+			for (int i = 0; i < components.size(); i++)
+			{
+				T* rez = dynamic_cast<T*>(components[i]);
+					if (rez) return rez;
+			}
+			return nullptr;
+		}
+
 
 
 		inline TransformMatrix2D& getWorldTransformMatrix() { return transformMatrix; }
 
-		inline void setX(float x) { position.x = x; transformChanged = true; }
-		inline void setY(float y) { position.y = y; transformChanged = true; }
-		inline void setScaleX(float x) { scale.x = x; transformChanged = true; }
-		inline void setScaleY(float y) { scale.y = y; transformChanged = true; }
-		inline void setAngle(float angle) { angle = angle; rotation = toRadians(angle); transformChanged = true; }
-		inline void setRotation(float rotation) { rotation = rotation; angle = toDegrees(rotation); transformChanged = true; }
-		inline void setAnchorX(float x) { anchor.x = x; transformChanged = true; }
-		inline void setAnchorY(float y) { anchor.y = y; transformChanged = true; }
+		inline void setX(float x) { position.x = x; }
+		inline void setY(float y) { position.y = y; }
+		inline void setScaleX(float x) { scale.x = x; }
+		inline void setScaleY(float y) { scale.y = y; }
+		inline void setAngle(float angle) { this->angle = angle; rotation = toRadians(angle); }
+		inline void setRotation(float rotation) { this->rotation = rotation; angle = toDegrees(rotation); }
+		inline void setAnchorX(float x) { anchor.x = x; }
+		inline void setAnchorY(float y) { anchor.y = y; }
+		inline void setWidth(float width) { this->width = width; }
+		inline void setHeight(float height) { this->height = height; }
+		inline void setAlpha(float alpha) { this->alpha = alpha; }
 		inline void setName(std::string newName) { name = newName; }
-		void setMaterial(Material* m );
+		inline void translate(float x, float y) { position.x += x; position.y += y; }
+		void setMaterial(Material* m);
+		inline void resetToOriginalDimensions() { setWidth(material->getTexture()->getWidth()); setHeight(material->getTexture()->getHeight()); }
 
-		inline float getX() { return position.x; }
-		inline float getY() { return position.y; }
-		inline float getScaleX() { return scale.x; }
-		inline float getScaleY() { return scale.y; }
-		inline float getAngle() { return angle; }
-		inline float getRotation() { return rotation; }
-		inline float getAnchorX() { return anchor.x; }
-		inline float getAnchorY() { return anchor.y; }
-		inline float getAlpha() { return alpha; }
-		inline float getWorldAlpha() { return worldAlpha; }
+		inline float getX() const { return position.x; }
+		inline float getY() const { return position.y; }
+		inline float getScaleX() const { return scale.x; }
+		inline float getScaleY() const { return scale.y; }
+		inline float getAngle() const { return angle; }
+		inline float getRotation() const { return rotation; }
+		inline float getAnchorX() const { return anchor.x; }
+		inline float getAnchorY() const { return anchor.y; }
+		inline float getWidth() const { return width; }
+		inline float getHeight() const { return height; }
+		inline float getAlpha() const { return alpha; }
+		inline float getWorldAlpha() const { return worldAlpha; }
+
+		inline Rect& getWorldBounds() { return worldBounds; }
+		inline Vector2& getWorldPosition() { return worldPosition; }
+		inline Vector2& getWorldScale() { return worldScale; }
 		inline std::string& getName() { return name; }
 		inline Material* getMaterial() { return material; }
+
+		~GameObject();
 
 	private:
 		Vector2 position;
 		Vector2 scale;
 		float angle;
 		float rotation;
+		Vector2 anchor;
+		float width;
+		float height;
+		TransformMatrix2D transformMatrix;
+		Vector2 worldPosition;
+		Vector2 worldScale;
+		float worldRotation;
+		Rect worldBounds;
 		float alpha;
 		float worldAlpha;
-		Vector2 anchor;
-		TransformMatrix2D transformMatrix;
 		bool transformChanged;
 		bool visible;
-		std::string name;
+		Material* material;
 		GameObject* parent;
+		std::string name;
 		Array<GameObject*> children;
 		Array<Component*> components;
-		Material* material;
 	};
 }
 

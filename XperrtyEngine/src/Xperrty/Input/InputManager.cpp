@@ -11,12 +11,27 @@ namespace Xperrty {
 		y = mousePositin.y;
 		//Invoke all the inputs from last frame.
 		if (keyActionsList.size() != 0) processKeyboardEvents();
+		if (mouseActionsList.size() != 0) processMouseEvents();
 		scrollX = lastScrollX;
 		scrollY = lastScrollY;
 
 		lastScrollX = 0;
 		lastScrollY = 0;
 		//Mouse
+	}
+
+	void InputManager::processMouseEvents() {
+		//First we process all the actions.
+		for (int i = 0; i < mouseActionsList.size(); i++)
+		{
+			MouseCodes& mouse = mouseActionsList[i].first;
+			InputActions& action = mouseActionsList[i].second;
+
+			if (action == Down)downMouseMap.add((Xperrty::MouseCodes)mouse, Time::now());
+			else if (action == Up) upMouseMap.add((Xperrty::MouseCodes)mouse, Time::now());
+		}
+		mouseActionsList.clear();
+		//ToDo: Invoke mouse events...
 	}
 
 	void InputManager::processKeyboardEvents() {
@@ -65,6 +80,8 @@ namespace Xperrty {
 	float InputManager::lastScrollY = 0;
 	Dictionary<KeyCodes, float> InputManager::downKeyMap;
 	Dictionary<KeyCodes, float> InputManager::upKeyMap;
+	Dictionary<MouseCodes, float> InputManager::downMouseMap;
+	Dictionary<MouseCodes, float> InputManager::upMouseMap;
 
 	Array<std::pair<KeyCodes, InputActions>> InputManager::keyActionsList;
 	Array<std::pair<MouseCodes, InputActions>> InputManager::mouseActionsList;

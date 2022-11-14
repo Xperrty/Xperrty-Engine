@@ -9,18 +9,22 @@
 //0,0-------1,0
 namespace Xperrty {
 	int Texture::globalId = 0;
-	Texture::Texture(const std::string& path) :pixels(nullptr), width(0), height(0), channels(0), uvs{ 0,0,1,0,1,1,0,1 }, isPixelMemoryFree(true),id(Texture::globalId)
+	Texture::Texture(const std::string& path) :Texture()
+	{
+		loadTexture(path);
+	}
+	Texture::Texture() :pixels(nullptr), width(0), height(0), channels(0), uvs{ 0,0,1,0,1,1,0,1 }, isPixelMemoryFree(true), id(Texture::globalId),texId(0)
 	{
 		globalId++;
-		loadTexture(path);
+
 	}
 	void Texture::uploadToGpu()
 	{
-		unsigned int texId;
+		//unsigned int texId;
 		glGenTextures(1, &texId);
 		glActiveTexture(GL_TEXTURE0 + id);
-		XP_INFO("Texture {0}", id);
 		glBindTexture(GL_TEXTURE_2D, texId);
+		XP_INFO("Texture {0} id {1}", id, texId);
 		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevelCount, GL_RGBA8, width, height, layerCount);
 		//glTexStorage3D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 1);
 		//glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, layerCount, GL_RGBA, GL_UNSIGNED_BYTE, texels);
@@ -45,6 +49,7 @@ namespace Xperrty {
 	{
 		stbi_set_flip_vertically_on_load(true);
 		pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
+		if (pixels == nullptr) XP_ERROR("NO IMAGE FOUND! path:{0}", path);
 		isPixelMemoryFree = false;
 	}
 }

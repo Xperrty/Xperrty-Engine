@@ -84,7 +84,7 @@ namespace Xperrty {
 		int aColor = glGetAttribLocation(shaderId, "aColor");//4 floats
 		int aAlpha = glGetAttribLocation(shaderId, "aAlpha");//1 float
 
-		XP_INFO("Pos{0} TCoord{1} TId{2} C{3} A{4}", aPosition, aTextureCoords, aTextureId, aColor, aAlpha);
+		//XP_INFO("Pos{0} TCoord{1} TId{2} C{3} A{4}", aPosition, aTextureCoords, aTextureId, aColor, aAlpha);
 
 		unsigned int positionOffset = 0;//0								->2 floats
 		unsigned int textureCoordsOffset = 2 * sizeof(float);//0 + 2	->3 floats
@@ -109,6 +109,18 @@ namespace Xperrty {
 		glUniform1i(glGetUniformLocation(shaderId, "uSampler2"), 1);
 		glUniform1i(glGetUniformLocation(shaderId, "uSampler3"), 2);
 		glUniform1i(glGetUniformLocation(shaderId, "uSampler4"), 3);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler5"), 4);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler6"), 5);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler7"), 6);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler8"), 7);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler9"), 8);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler10"), 9);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler11"), 10);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler12"), 11);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler13"), 12);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler14"), 13);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler15"), 14);
+		glUniform1i(glGetUniformLocation(shaderId, "uSampler16"), 15);
 	}
 
 	void Shader::unbind() {

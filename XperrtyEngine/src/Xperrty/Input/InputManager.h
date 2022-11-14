@@ -8,7 +8,7 @@ namespace Xperrty {
 		//Returns the last mouse X position.
 		inline static float getX() { return x; }
 		//Returns the last mouse Y position.
-		inline static float geY() { return y; }
+		inline static float getY() { return y; }
 		//Returns the last Scroll X value.
 		inline static float getScrollX() { return scrollX; }
 		//Returns the last Scroll Y value.
@@ -28,6 +28,15 @@ namespace Xperrty {
 			}
 			return downKeyMap.contains(code);
 		}
+		static inline bool isMouseDown(MouseCodes code, float timeInThePast = 0)
+		{
+			float lastDown;
+			float lastUp;
+			if (downMouseMap.tryGet(code, lastDown) && upMouseMap.tryGet(code, lastUp)) {
+				return lastDown>lastUp;
+			}
+			return downMouseMap.contains(code);
+		}
 		//Update the input system.
 		static void update();
 	private:
@@ -43,6 +52,8 @@ namespace Xperrty {
 		static void onMouseScroll(float offset);
 		static Dictionary<KeyCodes, float> downKeyMap;
 		static Dictionary<KeyCodes, float> upKeyMap;
+		static Dictionary<MouseCodes, float> downMouseMap;
+		static Dictionary<MouseCodes, float> upMouseMap;
 		static Array<std::pair<KeyCodes, InputActions>> keyActionsList;
 		static Array<std::pair<MouseCodes, InputActions>> mouseActionsList;
 		static InputInteractionEventData* inputActionEventData;

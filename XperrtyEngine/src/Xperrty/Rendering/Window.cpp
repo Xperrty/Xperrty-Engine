@@ -16,6 +16,7 @@ namespace Xperrty {
 		//glfwSetCursorPosCallback(window, &Window::onMouseMoveEvent); //Probably not needed... too much spam
 		glfwSetMouseButtonCallback(window, &Window::onMouseEvent);
 		glfwSetScrollCallback(window, &Window::onMouseScroll);
+		glfwSetWindowSizeCallback(window, &Window::onResizeCallback);
 		//setVSynk(VSynkMode::enabled);
 	}
 
@@ -120,23 +121,32 @@ namespace Xperrty {
 	}
 	void Window::onKeyboardEvent(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
-		XP_INFO("Pressed {0} action {1}", keyCodeStr((KeyCodes)key), action);
+		//XP_INFO("Pressed {0} action {1}", keyCodeStr((KeyCodes)key), action);
 		InputManager::onRawKeyPressed(key, scancode, action, mods);
 	}
 	void Window::onMouseMoveEvent(GLFWwindow* window, double xpos, double ypos)
 	{
-		XP_INFO("Mouse move x: {0} y{0}", xpos, ypos);
+		//XP_INFO("Mouse move x: {0} y{0}", xpos, ypos);
 	}
 	void Window::onMouseEvent(GLFWwindow* window, int button, int action, int mods)
 	{
 		InputManager::onMousePressed(button, action);
-		XP_INFO("Pressed Mouse {0} action {1}", button, action);
+		//XP_INFO("Pressed Mouse {0} action {1}", button, action);
 
 	}
 	void Window::onMouseScroll(GLFWwindow* window, double xoffset, double yoffset)
 	{
 		InputManager::onMouseScroll(yoffset);
-		XP_INFO("scroll Mouse Mouse x {0} y {1}", xoffset, yoffset);
+		//XP_INFO("scroll Mouse Mouse x {0} y {1}", xoffset, yoffset);
+
+	}
+	void Window::onResizeCallback(GLFWwindow* window, int width, int height)
+	{
+		DoubleFloatEventData ed(width, height);
+		instance->width = width;
+		instance->height = height;
+		EventManager::invoke(WINDOW_RESIZE, &ed);
+		//XP_INFO("scroll Mouse Mouse x {0} y {1}", xoffset, yoffset);
 
 	}
 }

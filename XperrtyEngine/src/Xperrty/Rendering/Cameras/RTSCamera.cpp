@@ -37,6 +37,7 @@ namespace Xperrty {
 	}
 	void RTSCamera::onEngineEvent(EngineEventType eventNr, EventData* eventData)
 	{
-		update();
+		Camera::onEngineEvent(eventNr, eventData);
+		if(eventNr == UPDATE) update();
 	}
 }

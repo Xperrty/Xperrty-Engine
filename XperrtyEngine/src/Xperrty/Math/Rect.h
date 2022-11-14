@@ -11,7 +11,7 @@ namespace Xperrty {
 		inline float getRight() const { return x + width; };
 		inline float getBot() const { return y + height; };
 		inline float getCenterX() const { return x + width / 2; };
-		inline float getCenterY() const { return x + height / 2; };
+		inline float getCenterY() const { return y + height / 2; };
 		inline Vector2 getCenter() const { return Vector2(getCenterX(), getCenterY()); };
 
 		inline void setX(float newX) { x = newX; };
@@ -26,13 +26,19 @@ namespace Xperrty {
 		};
 
 		Rect();
+		void rescale(float scaleX, float scaleY);
 		Rect(float x, float y, float width, float height);
+		//Quick AABB Collision
+		static bool intersects(const Rect& first, const Rect& second);
+		static bool intersects(const Rect& first, float rotationFirst, const Rect& second, float rotationSecond);
+		//ToDo:implement;
+		static bool intersects(const Rect& first, float rotationFirst, const Vector2& anchorFirst, const Rect& second, float rotationSecond, const Vector2& anchorSecond);
 		~Rect();
-	private:
 		float x;
 		float y;
 		float width;
 		float height;
+	private:
 
 		//void recalculateCenter();
 	};

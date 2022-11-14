@@ -36,10 +36,10 @@ namespace Xperrty {
 		//float w1 = (gameObject.forcedWidth || (texture.width)) * -aX;
 		//float h0 = (gameObject.forcedHeight || texture.height) * (1 - aY);
 		//float h1 = (gameObject.forcedHeight || texture.height) * -aY;
-		float w0 = texture->getWidth() * (1 - aX);
-		float w1 = texture->getWidth() * -aX;
-		float h0 = texture->getHeight() * (1 - aY);
-		float h1 = texture->getHeight() * -aY;
+		float w0 = gameObject->getWidth() * (1 - aX);
+		float w1 = gameObject->getWidth() * -aX;
+		float h0 = gameObject->getHeight() * (1 - aY);
+		float h1 = gameObject->getHeight() * -aY;
 
 		int i = 0;
 		float a = wt.getA();

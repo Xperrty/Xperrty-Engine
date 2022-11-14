@@ -5,9 +5,11 @@ namespace Xperrty {
 	public:
 		//Creates A batched Thread pool. Must use start and waitAll otherwise functions will not be called.
 		BatchedThreadPool(int cores);
-		//Adds a callback to the queue. *NO MT*
+		//Adds a callback to the queue. *NOT thread safe. DO NOT queue items between start and waitAll!*
 		inline void queue(const std::function<void()>& func) { callbacks.push_back(func); }
+		//Begins the processing of the queue.
 		void start();
+		//Waits for all the threads to finish work (Blocks calling thread).
 		void waitAll();
 		BatchedThreadPool(const BatchedThreadPool& other) = delete;
 		~BatchedThreadPool();

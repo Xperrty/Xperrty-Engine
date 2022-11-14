@@ -11,10 +11,12 @@ namespace Xperrty {
 		{
 			dataLoaded.push_back(false);
 			threads.push_back(std::thread(&BatchedThreadPool::run, this, i));
+			//std::thread::
 		}
 		waitAll();
 	}
 	void BatchedThreadPool::start() {
+		//XP_INFO("Data size {0}", callbacks.size());
 		std::lock_guard<std::mutex> startWorkGuard(startWorkMutex);
 		activeThreads = threadCount;
 		index = 0;

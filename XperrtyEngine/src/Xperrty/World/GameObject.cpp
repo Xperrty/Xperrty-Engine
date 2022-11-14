@@ -17,7 +17,7 @@ namespace Xperrty {
 	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle) :GameObject(name, position, scale, angle, Vector2(0.5f, 0.5f))
 	{
 	}
-	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle, const Vector2& anchor) :name(name), position(position), scale(scale), angle(angle), rotation(toRadians(angle)), alpha(1), anchor(anchor), transformChanged(true), visible(false), transformMatrix(scale.x, 0, 0, scale.y, position.x, position.y), worldAlpha(1), parent(nullptr), children(), components(), material(nullptr)
+	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle, const Vector2& anchor) :name(name), position(position), scale(scale), angle(angle), rotation(toRadians(angle)), alpha(1), anchor(anchor), width(100), height(100), transformChanged(true), visible(false), transformMatrix(scale.x, 0, 0, scale.y, position.x, position.y), worldBounds(0, 0, 0, 0), worldAlpha(1), parent(nullptr), children(), components(), material(nullptr), worldRotation(0), worldScale{ 1,1 },worldPosition{0,0}
 	{
 	}
 	void GameObject::updateTransform()
@@ -43,6 +43,17 @@ namespace Xperrty {
 		wt.setTx(tx * pt.getA() + ty * pt.getC() + pt.getTx());
 		wt.setTy(tx * pt.getB() + ty * pt.getD() + pt.getTy());
 
+		worldPosition.x = wt.getTx();
+		worldPosition.y = wt.getTy();
+
+		worldScale.x = sqrt(wt.getA() * wt.getA() + wt.getB() * wt.getB());
+		worldScale.y = sqrt(wt.getC() * wt.getC() + wt.getD() * wt.getD());
+		worldRotation = atan2(-wt.getC(), wt.getD());
+		float worldW = width * worldScale.x;
+		float worldH = height * worldScale.y;
+		worldAlpha = alpha;
+		//this.worldBounds.set(this.worldX - worldW * this.anchor.x, this.worldY - worldH * this.anchor.y, worldW, worldH)
+		worldBounds = Rect(worldPosition.x - worldW * anchor.x, worldPosition.y - worldH * anchor.y, worldW, worldH);
 		//no rotation
 		//--------
 			//float a = scale.x;
@@ -57,22 +68,16 @@ namespace Xperrty {
 			//wt.setTy(tx * pt.getB() + ty * pt.getD() + pt.getTy());
 		//--------
 
-		//out of bounds optimizations
-		//if (material != nullptr) material->updateVertices(this);
-		//this.worldPosition.set(wt.tx, wt.ty);
-		//this.worldScale.set(Math.sqrt(wt.a * wt.a + wt.b * wt.b), Math.sqrt(wt.c * wt.c + wt.d * wt.d));
-		//this.worldRotation = Math.atan2(-wt.c, wt.d);
-		//if (this.texture) {
-		//    var w = this.texture.width * this.scale.x;
-		//    var h = this.texture.height * this.scale.y;
-		//    var worldW = this.texture.width * this.worldScale.x;
-		//    var worldH = this.texture.height * this.worldScale.y;
-		//    this.bounds.set(this.x - w * this.anchor.x, this.y - h * this.anchor.y, w, h);
-		//    this.worldBounds.set(this.worldX - worldW * this.anchor.x, this.worldY - worldH * this.anchor.y, worldW, worldH);
-		//    this.outOfBounds = this.worldBounds.right < 0 || this.worldBounds.bottom < 0 || this.worldBounds.left > this.game.scale.renderResolution.x || this.worldBounds.top > this.game.scale.renderResolution.y;
 	}
 	void GameObject::setMaterial(Material* m)
 	{
 		material = m;
+	}
+
+	GameObject::~GameObject() {
+		for (int i = 0; i < components.size(); i++)
+		{
+			delete components[i];
+		}
 	}
 }

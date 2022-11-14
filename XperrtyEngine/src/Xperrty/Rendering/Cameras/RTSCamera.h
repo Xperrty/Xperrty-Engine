@@ -1,7 +1,7 @@
 #pragma once
 #include "Camera.h"
 namespace Xperrty {
-	class RTSCamera :public Camera, IEngineEventListener {
+	class RTSCamera :public Camera {
 	public:
 		RTSCamera(Rect bounds, float scale, float speed);
 		void enableFreeMove();
@@ -9,7 +9,6 @@ namespace Xperrty {
 		void update();
 		~RTSCamera();
 
-		// Inherited via IEngineEventListener
 		virtual void onEngineEvent(EngineEventType eventNr, EventData* eventData) override;
 	protected:
 		float speed;
