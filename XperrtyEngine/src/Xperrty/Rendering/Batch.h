@@ -17,7 +17,7 @@ namespace Xperrty {
 			if (gameObjects.size() > 0) return gameObjects[0]->getMaterial();
 			else return nullptr;
 		}
-		inline int size()const { return gameObjects.size(); }
+		inline int size()const { return (int)gameObjects.size(); }
 		inline bool isFull() { return size() >= capacity; }
 		~Batch();
 		Batch(const Batch& other) = delete;

@@ -3,6 +3,7 @@
 #include "Xperrty/Rendering/Texture.h"
 #include "Xperrty/World/GameObject.h"
 
+//Basic Follow behaviour, straight line towards the target. Stops when it's close to the target.
 class Follower :public Xperrty::Component
 {
 public:
@@ -12,7 +13,9 @@ public:
 	virtual void init()override;
 	virtual void onUpdate(float dt)override;
 
+	//Sets the target to follow.
 	void setTarget(Xperrty::GameObject* object, float speed);
+	//Changes the follow speed.
 	inline void setSpeed(float speed) { this->speed = speed; };
 
 	Follower();

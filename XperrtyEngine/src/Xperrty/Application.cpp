@@ -5,18 +5,6 @@
 
 //TODO:DELETE. For testing only
 #include "Xperrty/Time/Timer.h"
-#include "Xperrty/Testing/Test.h"
-#include "stb_image.h"
-#include "Performance/ObjectPool.h"
-#include "Xperrty/Math/Rect.h"
-#include "Xperrty/Rendering/Cameras/RTSCamera.h"
-#include "glad/glad.h"
-#include "Rendering/Utils/BufferData.h"
-#include "Rendering/Material.h"
-#include <filesystem>
-#include "Performance/BatchedThreadPool.h"
-#include "Xperrty/Time/Stopwatch.h"
-#include <future>
 
 //Tests
 #include "Testing/BatchTest.h"
@@ -36,13 +24,9 @@ namespace Xperrty {
 
 	}
 	void Application::run() {
-		std::cout << "RUN!" << std::endl;
 		int batchSize = 200;
 		Timer<Application> timer(2000.0f, -1, this, &Application::onTimerDone);
 
-		XP_TRACE("Starting Tests!");
-		BatchTest bt;
-		XP_TRACE("Tests done!");
 		
 		while (isRunning)
 		{

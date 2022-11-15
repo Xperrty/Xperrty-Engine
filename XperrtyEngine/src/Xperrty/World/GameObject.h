@@ -55,7 +55,7 @@ namespace Xperrty {
 		inline void setIsStatic(bool isStatic) { this->isStatic = isStatic; }
 		inline void translate(float x, float y) { position.x += x; position.y += y; }
 		void setMaterial(Material* m);
-		inline void resetToOriginalDimensions() { setWidth(material->getTexture()->getWidth()); setHeight(material->getTexture()->getHeight()); }
+		inline void resetToOriginalDimensions() { setWidth((float)material->getTexture()->getWidth()); setHeight(material->getTexture()->getHeight()); }
 
 		inline float getX() const { return position.x; }
 		inline float getY() const { return position.y; }

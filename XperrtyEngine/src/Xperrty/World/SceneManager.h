@@ -8,7 +8,7 @@ namespace Xperrty {
 	class SceneManager
 	{
 	public:
-		~SceneManager();
+		~SceneManager() = default;
 		template <typename ...Args>
 		GameObject* createObject(Args... args) {
 			GameObject* go = goPool.newObject(args...);
@@ -32,6 +32,7 @@ namespace Xperrty {
 		Array<GameObject*> objectList;
 		Array<std::shared_ptr<Batch>> batches;
 		friend class Application;
+		unsigned int renderedObjects;
 	};
 
 }

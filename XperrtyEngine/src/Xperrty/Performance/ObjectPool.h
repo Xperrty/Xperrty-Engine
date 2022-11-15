@@ -103,6 +103,7 @@ namespace Xperrty {
 			for (int i = 0; i < memoryChunks.size(); i++)
 			{
 				char* chunk = memoryChunks[i];
+				//Fits in a 32bit int.
 				char* chunkOffset = (char*)(objectCharPtr - chunk);
 				XP_WARN("Chunk {0}, ChunkOffset{1}, ChunkSize{2}, ObjectCharPtr{3}, IntCHunkOffset{4}", (long long)chunk, (long long)chunkOffset, chunkSize, (long long)objectCharPtr, (int)chunkOffset);
 				//We found the chunk
