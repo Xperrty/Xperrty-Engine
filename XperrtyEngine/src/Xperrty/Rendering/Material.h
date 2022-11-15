@@ -13,7 +13,7 @@ namespace Xperrty {
 		float alpha;
 		MaterialVertexData() :position{ 0,0 }, UV{ 0,0 }, textureId(0), colors{1,1,1,1}, alpha(1) {}
 		//ToDO:Add constructor for colors as well...
-		MaterialVertexData(float x, float y, float u, float v, float alpha, int texId) :position{ x,y }, UV{ u,v },textureId(texId), colors{ 1,1,1,1 }, alpha(alpha) {}
+		MaterialVertexData(float x, float y, float u, float v, float alpha, int texId) :position{ x,y }, UV{ u,v },textureId(static_cast<int>(texId)), colors{ 1,1,1,1 }, alpha(alpha) {}
 	};
 	class Material
 	{

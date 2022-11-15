@@ -18,9 +18,11 @@ namespace Xperrty {
 		void removeObject(GameObject* go);
 		void addObject(GameObject* go);
 		void renderScene();
-		inline int getTotalObjects() {
-			if (batches.size() == 0) return 0;
-			return (batches.size() - 1) * 400 + batches.back()->gameObjects.size();
+		inline unsigned int getTotalObjects() {
+			return static_cast<unsigned int>(objectList.size());
+		}
+		inline unsigned int getRenderedObjects() {
+			return renderedObjects;
 		}
 		static SceneManager* instance();
 	private:

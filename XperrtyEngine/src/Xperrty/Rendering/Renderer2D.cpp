@@ -34,7 +34,6 @@ namespace Xperrty {
 
 	}
 	void Renderer2D::onEngineEvent(Xperrty::EngineEventType eventNr, Xperrty::EventData* eventData) {
-		XP_INFO("HELLO RESIZE!");
 		glViewport(0, 0, Window::instance->getWidth(), Window::instance->getHeight());
 	}
 
@@ -52,13 +51,8 @@ namespace Xperrty {
 		batch.getMaterial()->uploadUniforms();
 		BufferData& buffer = batch.getBufferData();
 		buffer.uploadData();
-
-		{
-
-			glDrawElements(GL_TRIANGLES, batch.size() * 6, GL_UNSIGNED_INT, nullptr);
-		}
-		//batch.
-		//glBindVertexArray(buffer.)
+		drawCalls++;
+		glDrawElements(GL_TRIANGLES, batch.size() * 6, GL_UNSIGNED_INT, nullptr);
 		GLCheckError();
 	}
 
@@ -120,6 +114,7 @@ namespace Xperrty {
 	void Renderer2D::clear() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		drawCalls = 0;
 	}
 
 }

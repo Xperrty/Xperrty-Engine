@@ -27,7 +27,7 @@ namespace Xperrty {
 		int batchSize = 200;
 		Timer<Application> timer(2000.0f, -1, this, &Application::onTimerDone);
 
-		
+		XP_INFO("Sizeof size_t{0}", sizeof(size_t));
 		while (isRunning)
 		{
 
@@ -46,7 +46,7 @@ namespace Xperrty {
 
 	}
 	void Application::onTimerDone(float value) {
-		XP_TRACE("Fps:{0} Objects:{1}", updates / 2, SceneManager::instance()->getTotalObjects());
+		XP_TRACE("Fps:{0} Objects:{1} Rendered:{2} DrawCalls:{3}", updates / 2, SceneManager::instance()->getTotalObjects(),SceneManager::instance()->getRenderedObjects(), Renderer2D::instance->getDrawCalls());
 		this->updates = 0;
 	}
 

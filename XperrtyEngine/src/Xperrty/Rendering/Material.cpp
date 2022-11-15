@@ -21,7 +21,7 @@ namespace Xperrty {
 		Window* window = Window::instance;
 		Camera* camera = Camera::getActiveCamera();
 		//shader->setUniform2f(resolutionLocation, window->getWidth(), window->getHeight());
-		shader->setUniform2f(projectionLocation, window->getWidth() / 2, -window->getHeight() / 2);
+		shader->setUniform2f(projectionLocation, static_cast<float>(window->getWidth()) / 2, -static_cast<float>(window->getHeight()) / 2);
 		shader->setUniform3f(cameraPositionLocation, camera->getBounds().getX(), camera->getBounds().getY(), camera->getScale());
 	}
 

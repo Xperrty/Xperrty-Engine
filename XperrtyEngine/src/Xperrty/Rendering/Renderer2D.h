@@ -14,13 +14,14 @@ namespace Xperrty {
 		void clear();
 		void renderQuadImmediate(Rect bounds, Shader* shader, Texture* texture, const Color& color);
 		virtual void onEngineEvent(Xperrty::EngineEventType eventNr, Xperrty::EventData* eventData) override;
-
+		inline unsigned int getDrawCalls() { return drawCalls; }
 		~Renderer2D();
 
 	private:
 		Shader* activeShader;
 		Shader* lastUsedShader;
 		unsigned int immediate_VAO;
+		unsigned int drawCalls;
 		unsigned int immediate_vertBuffer;
 		unsigned int immediate_indexBuffer;
 		void generateImmediatBuffers();
