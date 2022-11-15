@@ -23,7 +23,7 @@ namespace Xperrty {
 		Batch(const Batch& other) = delete;
 		Batch(Batch& other) = delete;
 		Array<GameObject*> gameObjects;
-		bool done;
+		std::atomic<bool> done;
 	private:
 		BufferData bd;
 		int capacity;

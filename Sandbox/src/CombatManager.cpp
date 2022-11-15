@@ -8,10 +8,11 @@
 #include "Components/Arrow.h"
 #include "Xperrty/Containers/Array.h"
 #include <filesystem>
+#include "Xperrty/Time/Stopwatch.h"
 // temp random
 #include <cstdlib>
 
-CombatManager::CombatManager() :playerController(), enemiesPool(10000), arrowsPool(10000), materialsPool(10000), removeMutex(), mainShader(Xperrty::Shader::getShader(Xperrty::Shader::getDefaultShaderPath())), arrowTexture(Xperrty::TextureManager::getTexture(6)), enemySpawnTimer(0.01), enemyTimer(0), threadPool(8), kills(0), logTimer(2000, -1, this, &CombatManager::onLogTimerDone) {
+CombatManager::CombatManager() :playerController(), enemiesPool(1000), arrowsPool(1000), materialsPool(2000), removeMutex(), mainShader(Xperrty::Shader::getShader(Xperrty::Shader::getDefaultShaderPath())), arrowTexture(Xperrty::TextureManager::getTexture(6)), enemySpawnTimer(0.001), enemyTimer(0), threadPool(14), kills(0), logTimer(2000, -1, this, &CombatManager::onLogTimerDone) {
 	_instance = this;
 	Xperrty::EventManager::addEventListener(Xperrty::UPDATE, this);
 	enemiesPool.debug = true;
@@ -25,14 +26,7 @@ void CombatManager::onEngineEvent(Xperrty::EngineEventType eventNr, Xperrty::Eve
 
 void CombatManager::updateArrows(float dt) {
 	//ToDo:add fixed updates;
-	for (int i = 0; i < arrowsToRemove.size(); i++)
-	{
 
-		//materialsPool.deleteObject(arrowsToRemove[i]->getMaterial());
-		arrows.remove(arrowsToRemove[i]);
-		//arrowsPool.deleteObject(arrowsToRemove[i]);
-	}
-	arrowsToRemove.clear();
 	int start = 0;
 	while (start <= arrows.size()) {
 
@@ -57,10 +51,10 @@ void CombatManager::updateEnemies(float dt) {
 	{
 		AnimationPlayer* animation = dyingEnemies[i]->getComponent<AnimationPlayer>();
 		if (animation->donePlaying) {
-			//materialsPool.deleteObject(dyingEnemies[i]->getMaterial());
-			//enemiesPool.deleteObject(dyingEnemies[i]);
-			//Xperrty::SceneManager::instance()->removeObject(dyingEnemies[i]);
-			dyingEnemies[i]->setAlpha(0);
+			materialsPool.deleteObject(dyingEnemies[i]->getMaterial());
+			Xperrty::SceneManager::instance()->removeObject(dyingEnemies[i]);
+			enemiesPool.deleteObject(dyingEnemies[i]);
+			//dyingEnemies[i]->setAlpha(0);
 			dyingEnemies.removeAt(i);
 			i--;
 		}
@@ -88,37 +82,51 @@ void CombatManager::checkCollisions() {
 
 	Array<int> removedArrows;
 	Array<int> removedEnemies;
-	for (int i = 0; i < arrows.size(); i++)
-	{
-		if (removedArrows.contains(i))continue;
-		//Check each arrow with each zombie...
-		//Really slow... but for now throw power at the problem and move on.
-		threadPool.queue([&, this, i, removedArrows, removedEnemies] {});
-		for (int j = 0; j < enemies.size(); j++)
+	if (arrows.size() != 0) {
+		//Stopwatch sw;
+		for (int i = 0; i < arrows.size(); i++)
 		{
-			if (removedEnemies.contains(j)) continue;
-			Xperrty::Vector2 distance(arrows[i]->getWorldPosition() - enemies[j]->getWorldPosition());
-			if (distance.magnitude() < 156) {
-				//XP_INFO("Mag {0} X {1} Y {2} AX{3} AY{4} EX{5} EY{6} ", distance.magnitude(),distance.x,distance.y, arrows[i]->getWorldPosition().x, arrows[i]->getWorldPosition().y, enemies[j]->getWorldPosition().x, enemies[j]->getWorldPosition().y);
-				//Check rect collision but for now...
-				std::lock_guard<std::mutex> removeGuard(removeMutex);
-				arrows[i]->setAlpha(0);
+			if (removedArrows.contains(i))continue;
+			//Check each arrow with each zombie...
+			//Really slow... but for now throw power at the problem and move on.
+			threadPool.queue([&, this, ind = i]() mutable {
+				//int ind = i;
+				for (int j = 0; j < enemies.size(); j++)
+				{
+					//if (removedEnemies.contains(j)) continue;
+					Xperrty::Vector2 distance(arrows[ind]->getWorldPosition() - enemies[j]->getWorldPosition());
+					if (distance.magnitude() < 156) {
+						//XP_INFO("Mag {0} X {1} Y {2} AX{3} AY{4} EX{5} EY{6} ", distance.magnitude(),distance.x,distance.y, arrows[i]->getWorldPosition().x, arrows[i]->getWorldPosition().y, enemies[j]->getWorldPosition().x, enemies[j]->getWorldPosition().y);
+						//Check rect collision but for now...
+						std::lock_guard<std::mutex> removeGuard(removeMutex);
+						//arrows[ind]->setAlpha(0);
 
-				enemies[j]->getComponent<Follower>()->setSpeed(0);
-				enemies[j]->getComponent<AnimationPlayer>()->playAnimation(0, 0.5, 1);
-				if (!removedArrows.contains(i))removedArrows.push_back(i);
-				if (!removedEnemies.contains(j))removedEnemies.push_back(j);
-				break;
-			}
+						//int removed = 0;
+						if (!removedArrows.contains(ind) && !removedEnemies.contains(j))removedArrows.push_back(ind);
+						if (!removedEnemies.contains(j)) {
+							enemies[j]->getComponent<Follower>()->setSpeed(0);
+							enemies[j]->getComponent<AnimationPlayer>()->playAnimation(0, 0.5, 1);
+							removedEnemies.push_back(j);
+							break;
+						}
+					}
+				}
+				});
 		}
+		threadPool.start();
+		threadPool.waitAll();
 	}
-	threadPool.start();
-	threadPool.waitAll();
-
+	std::sort(removedArrows.begin(), removedArrows.end());
+	
+	for (int i = 1; i < removedArrows.size(); i++)
+	{
+		if (removedArrows[i] == removedArrows[i - 1])APP_ERROR("DUPLICATE ARROWS REMOVE!!!!");
+	}
 	for (int i = removedArrows.size() - 1; i >= 0; i--)
 	{
-		//materialsPool.deleteObject(arrows[removedArrows[i]]->getMaterial());
-		//arrowsPool.deleteObject(arrows[removedArrows[i]]);
+		materialsPool.deleteObject(arrows[removedArrows[i]]->getMaterial());
+		Xperrty::SceneManager::instance()->removeObject(arrows[removedArrows[i]]);
+		arrowsPool.deleteObject(arrows[removedArrows[i]]);
 		arrows.removeAt(removedArrows[i]);
 	}
 	std::sort(removedEnemies.begin(), removedEnemies.end());
@@ -138,6 +146,17 @@ void CombatManager::updateObjects() {
 	updateEnemies(dt);
 	threadPool.start();
 	threadPool.waitAll();
+
+	for (int i = 0; i < arrowsToRemove.size(); i++)
+	{
+
+		//materialsPool.deleteObject(arrowsToRemove[i]->getMaterial());
+		Xperrty::SceneManager::instance()->removeObject(arrowsToRemove[i]);
+		arrows.remove(arrowsToRemove[i]);
+		arrowsPool.deleteObject(arrowsToRemove[i]);
+	}
+	arrowsToRemove.clear();
+
 	checkCollisions();
 	//ToDo:check for errors 
 	playerController.getPlayer()->getComponent<AnimationPlayer>()->onUpdate(dt);
@@ -185,7 +204,8 @@ void CombatManager::spawnArrows(int count) {
 	//using namespace Xperrty;
 	Xperrty::Vector2 direction = Xperrty::Camera::getActiveCamera()->screenToWorldPoint(mx, my) - playerController.getPlayer()->getWorldPosition();
 	direction.normalize();
-	int numberOfArrows = kills / 100 + 1;
+	//int numberOfArrows = std::min(16, kills / 100 + 1);
+	int numberOfArrows =  kills / 100 + 1;
 	float rotationDifference = std::min(toRadians(10), Pi * 2 / numberOfArrows);
 
 	//APP_INFO("Raw Mx {0} Raw My{1} Cam Scale{2} camX{3} camY{4}", mx, my, Xperrty::Camera::getActiveCamera()->getScale(), Xperrty::Camera::getActiveCamera()->getBounds().x, Xperrty::Camera::getActiveCamera()->getBounds().y);

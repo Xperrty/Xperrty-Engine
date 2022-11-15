@@ -17,11 +17,20 @@ namespace Xperrty {
 		T* newObject(Args... args) {
 			
 			char* memorySpot = getNextAvailableSpot();
+			if (debugAllocArray.contains(memorySpot)) XP_ERROR("TRYING TO INSTANTIATE THE SAME MEMORY SPOT TWICE!");
+			debugAllocArray.push_back(memorySpot);
 			return new(memorySpot) T(args...);
 		}
 		void deleteObject(T* object) {
-			object->~T();
+			return;
+			if (debugAllocArray.contains((char*)object)) {
+				debugAllocArray.remove((char*)object);
+
+			}
+			else XP_ERROR(" TRYING TO REMOVE AN OBJECT TWICE!");
+
 			int objectIndex = findObjectIndex(object);
+			object->~T();
 			freePositions.push_back(objectIndex);
 			//if (debug) XP_INFO("Deleted object at memLocation {0} and freed index {1}", (unsigned long long)object, objectIndex);
 		}
@@ -81,14 +90,31 @@ namespace Xperrty {
 				char* chunk = memoryChunks[i];
 				char* chunkOffset = (char*)(objectCharPtr - chunk);
 				//We found the chunk
-				if (objectCharPtr > chunk && (int)chunkOffset <= chunkSizeInBytes) {
+				if (objectCharPtr >= chunk && (int)chunkOffset < chunkSizeInBytes) {
 					return i * chunkSize + (int)chunkOffset / sizeof(T);
 				}
 			}
-			return 0;
+			findObjectIndexDebug(object);
+			return -1;
+		}
+		int findObjectIndexDebug(T* object) {
+			int chunkSizeInBytes = chunkSize * sizeof(T);
+			char* objectCharPtr = (char*)object;
+			for (int i = 0; i < memoryChunks.size(); i++)
+			{
+				char* chunk = memoryChunks[i];
+				char* chunkOffset = (char*)(objectCharPtr - chunk);
+				XP_WARN("Chunk {0}, ChunkOffset{1}, ChunkSize{2}, ObjectCharPtr{3}, IntCHunkOffset{4}", (long long)chunk, (long long)chunkOffset, chunkSize, (long long)objectCharPtr, (int)chunkOffset);
+				//We found the chunk
+				if (objectCharPtr >= chunk && (int)chunkOffset <= chunkSizeInBytes) {
+					return i * chunkSize + (int)chunkOffset / sizeof(T);
+				}
+			}
+			return -1;
 		}
 
 		Array<char*> memoryChunks;
+		Array<char*> debugAllocArray;
 		Array<int> freePositions;
 		int lastPointer;
 		int chunkSize;

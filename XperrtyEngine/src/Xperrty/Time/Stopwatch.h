@@ -36,10 +36,10 @@ public:
 		return Elapsed() * 1000.0f;
 	}
 	~Stopwatch() {
-		//XP_INFO("Time Spent in block {0}ms.", ElapsedMillis());
+		XP_INFO("Time Spent in block {0}ms.", ElapsedMillis());
 		//std::cout << ElapsedMillis() << "ms." << std::endl;
-		std::lock_guard<std::mutex> mtx(arrMtx);
-		msArr.push_back(ElapsedMillis());
+		//std::lock_guard<std::mutex> mtx(arrMtx);
+		//msArr.push_back(ElapsedMillis());
 	}
 	static Array<float> msArr;
 	static std::mutex arrMtx;

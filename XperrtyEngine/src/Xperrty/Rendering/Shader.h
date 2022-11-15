@@ -40,6 +40,7 @@ namespace Xperrty {
 		Dictionary<std::string, unsigned int> uniformLocations;
 		static Dictionary<std::string, Shader*> shaderSrcMap;
 		void getUniformLocations();
+		
 
 		void parseShaders();
 	};

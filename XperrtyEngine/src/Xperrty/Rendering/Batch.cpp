@@ -36,9 +36,10 @@ namespace Xperrty {
 			//go->setScaleX(go->getScaleX() + Time::dt() * 0.015);
 			//go->setScaleY(go->getScaleY() + Time::dt() * 0.015);
 			//go->setAngle(go->getAngle() + Time::dt() * 360);
-			go->updateTransform();
+			if (!go->getIsStatic()) go->updateTransform();
+			//go->updateTransform();
 			//if (Rect::intersects(cameraBounds, go->getWorldBounds()))
-				go->getMaterial()->setVerticesMemLocation((MaterialVertexData*)bd.getVertex(i));
+			go->getMaterial()->setVerticesMemLocation((MaterialVertexData*)bd.getVertex(i));
 		}
 		//XP_INFO("{0}",gameObjects[0]->getAngle());
 		done = true;

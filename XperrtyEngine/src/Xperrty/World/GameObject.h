@@ -52,6 +52,7 @@ namespace Xperrty {
 		inline void setHeight(float height) { this->height = height; }
 		inline void setAlpha(float alpha) { this->alpha = alpha; }
 		inline void setName(std::string newName) { name = newName; }
+		inline void setIsStatic(bool isStatic) { this->isStatic = isStatic; }
 		inline void translate(float x, float y) { position.x += x; position.y += y; }
 		void setMaterial(Material* m);
 		inline void resetToOriginalDimensions() { setWidth(material->getTexture()->getWidth()); setHeight(material->getTexture()->getHeight()); }
@@ -68,6 +69,7 @@ namespace Xperrty {
 		inline float getHeight() const { return height; }
 		inline float getAlpha() const { return alpha; }
 		inline float getWorldAlpha() const { return worldAlpha; }
+		inline float getIsStatic() const { return isStatic; }
 
 		inline Rect& getWorldBounds() { return worldBounds; }
 		inline Vector2& getWorldPosition() { return worldPosition; }
@@ -94,6 +96,7 @@ namespace Xperrty {
 		float worldAlpha;
 		bool transformChanged;
 		bool visible;
+		bool isStatic;
 		Material* material;
 		GameObject* parent;
 		std::string name;

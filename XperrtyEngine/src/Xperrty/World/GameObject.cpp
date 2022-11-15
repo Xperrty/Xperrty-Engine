@@ -17,7 +17,7 @@ namespace Xperrty {
 	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle) :GameObject(name, position, scale, angle, Vector2(0.5f, 0.5f))
 	{
 	}
-	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle, const Vector2& anchor) :name(name), position(position), scale(scale), angle(angle), rotation(toRadians(angle)), alpha(1), anchor(anchor), width(100), height(100), transformChanged(true), visible(false), transformMatrix(scale.x, 0, 0, scale.y, position.x, position.y), worldBounds(0, 0, 0, 0), worldAlpha(1), parent(nullptr), children(), components(), material(nullptr), worldRotation(0), worldScale{ 1,1 },worldPosition{0,0}
+	GameObject::GameObject(const std::string& name, const Vector2& position, const Vector2& scale, float angle, const Vector2& anchor) :name(name), position(position), scale(scale), angle(angle), rotation(toRadians(angle)), alpha(1), anchor(anchor), width(100), height(100), transformChanged(true), visible(false), transformMatrix(scale.x, 0, 0, scale.y, position.x, position.y), worldBounds(0, 0, 0, 0), worldAlpha(1), parent(nullptr), children(), components(), material(nullptr), worldRotation(0), worldScale{ 1,1 },worldPosition{0,0}, isStatic(false)
 	{
 	}
 	void GameObject::updateTransform()

@@ -8,14 +8,18 @@ namespace Xperrty {
 		if (batches.size() == 0 || batches.back()->isFull()) {
 			batches.push_back(std::make_shared<Batch>(go->getMaterial(), 400));
 		}
-		batches.back()->addObject(go);
-		/*for (int i = 0; i < batches.size(); i++)
+		//batches.back()->addObject(go);
+		for (int i = 0; i < batches.size(); i++)
 		{
-			if (!batches[i]->isFull())batches[i]->addObject(go);
-		}*/
+			if (!batches[i]->isFull()) {
+				batches[i]->addObject(go);
+				break;
+			}
+		}
 	}
 	void SceneManager::addObject(GameObject* go) {
-		addObjectInBatch(go);
+		objectList.push_back(go);
+		//addObjectInBatch(go);
 	}
 	//ToDo:implement
 	void SceneManager::removeObject(GameObject* go) {
@@ -28,24 +32,34 @@ namespace Xperrty {
 			}
 		}
 	}
+	
 	void SceneManager::renderScene() {
-		Stopwatch sw;
-		
+		//Stopwatch sw;
+		for (int i = 0; i < batches.size(); i++)
+		{
+			batches[i]->clear();
+		}
+		for (int i = 0; i < objectList.size(); i++)
+		{
+			if (objectList[i] != nullptr)addObjectInBatch(objectList[i]);
+		}
+
 		for (int j = 0; j < batches.size(); j++)
 		{
-			Batch& batch = *batches[j];
-			batch.done = false;
-
-			if (batch.size() != 0) threadPool.queue([&, b = &batch] {b->updateTransforms(); });
+			Batch* batch = batches[j].get();
+			batch->done = false;
+			//batch->updateTransforms();
+			if (batch->size() != 0) threadPool.queue([&, b = batch] {b->updateTransforms(); });
 		}
 		threadPool.start();
 		for (int j = 0; j < batches.size(); j++)
 		{
 			Batch& batch = *batches[j];
 			//Quick spinlock to make sure the batch is done updating before rendering it.
-			while (!batch.done) {
+			while (!batch.done && batch.size()!=0) {
+				//XP_INFO("Spinlock");
 			}
-			Renderer2D::instance->renderBatch(batch);
+			if (batch.size() != 0)Renderer2D::instance->renderBatch(batch);
 		}
 		threadPool.waitAll();
 	}

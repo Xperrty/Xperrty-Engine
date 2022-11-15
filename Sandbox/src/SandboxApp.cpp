@@ -4,7 +4,7 @@
 #include "Xperrty/Rendering/Cameras/FollowCamera.h"
 class SandboxApp :public  Xperrty::Application, public Xperrty::IEngineEventListener {
 public:
-	SandboxApp() : terrain(20, 20), combatManager() {
+	SandboxApp() : terrain(0, 0), combatManager() {
 		//APP_TRACE("TRACE! {0}", 10);
 		//APP_INFO("INFO!{0}", 11);
 		//APP_WARN("WARN!{0}", 12);

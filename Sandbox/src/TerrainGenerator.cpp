@@ -29,6 +29,8 @@ void TerrainGenerator::generateTerrain(int width, int height) {
 			go->setY(startY);
 			go->setWidth(250);
 			go->setHeight(250);
+			go->updateTransform();
+			go->setIsStatic(true);
 			startY += 250;
 		}
 		startX += 250;
