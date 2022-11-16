@@ -22,7 +22,7 @@ namespace Xperrty {
 			return new(memorySpot) T(args...);
 		}
 		void deleteObject(T* object) {
-			return;
+			//return;
 			if (debugAllocArray.contains((char*)object)) {
 				debugAllocArray.remove((char*)object);
 

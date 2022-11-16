@@ -9,6 +9,7 @@ namespace Xperrty {
 		~TextureManager() {};
 
 		static Texture* getTexture(int id);
+		static void freeTexturePtr(Texture* texture);
 		static void init();
 	private:
 		TextureManager();

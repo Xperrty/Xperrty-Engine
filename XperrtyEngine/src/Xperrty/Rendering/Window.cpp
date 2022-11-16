@@ -28,8 +28,12 @@ namespace Xperrty {
 		if (!glfwInit())
 			return;
 
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 		/* Create a windowed mode window and its OpenGL context */
-		window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
+		window = glfwCreateWindow(width, height, "Performance Demo", NULL, NULL);
 		GLFWwindow* glfwWindow = (GLFWwindow*)window;
 		if (!window)
 		{

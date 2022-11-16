@@ -9,12 +9,10 @@
 #include "CombatManager.h"
 #include <filesystem>
 PlayerController::PlayerController() :speed(1000), followCam(nullptr), shotCooldown(0),currentAnimation(3) {
-	object = std::shared_ptr<Xperrty::GameObject>(Xperrty::SceneManager::instance()->createObject());
+	object = std::make_shared<Xperrty::GameObject>();
 	Xperrty::Texture* texture = Xperrty::TextureManager::getTexture(7);
-	//Even though it's not a good idea to use get on shared/unique pointers in this context it's ok. GameObject doesn't delete the Material* and Material doesn't delete GameObject*
-	//And in this class they will be both destroyed at the same time.
-	mat = std::make_unique<Xperrty::Material>(Xperrty::Shader::getShader(std::filesystem::current_path().string() + "\\..\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl"), texture, object.get());
-	object->setMaterial(mat.get());
+	mat = new Xperrty::Material(Xperrty::Shader::getShader(std::filesystem::current_path().string() + "\\..\\XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl"), texture, object.get());
+	object->setMaterial(mat);
 	Xperrty::SceneManager::instance()->addObject(object.get());
 	followCam = new Xperrty::FollowCamera({ 0,0,(float)Xperrty::Window::instance->getWidth(), (float)Xperrty::Window::instance->getHeight() });
 	followCam->addFollowTarget(object.get());
@@ -55,10 +53,7 @@ void PlayerController::onUpdate(Xperrty::EventData* eventData) {
 		object->setY(object->getY() + dt * speed);
 		input = true;
 	}
-	if (Xperrty::InputManager::isKeyDown(Xperrty::KEY_SPACE)) {
-		animation->playAnimation(0,1,1);
-		currentAnimation = 0;
-	}
+	
 	if (!input && currentAnimation == 2) {
 		animation->playAnimation(3);
 		currentAnimation = 3;

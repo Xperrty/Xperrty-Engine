@@ -4,7 +4,7 @@
 namespace Xperrty {
 	//Creates A batched Thread pool. Must use start and waitAll otherwise functions will not be called.
 
-	 BatchedThreadPool::BatchedThreadPool(int cores) :threadCount(cores), done(false), activeThreads(threadCount), index(0) {
+	 BatchedThreadPool::BatchedThreadPool(int cores) :threadCount(cores>0?cores:1), done(false), activeThreads(threadCount), index(0) {
 		callbacks.reserve(2000);
 		threads.reserve(threadCount);
 		for (int i = 0; i < threadCount; i++)

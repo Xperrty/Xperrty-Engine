@@ -2,6 +2,7 @@
 #include "Xperrty/Time/Time.h"
 namespace Xperrty {
 	struct InputInteractionEventData;
+	//ToDo:Rework the entire isUp and isDown functionality.
 	class InputManager
 	{
 	public:
@@ -27,6 +28,16 @@ namespace Xperrty {
 				return lastDown>lastUp;
 			}
 			return downKeyMap.contains(code);
+		}
+
+		//BROKEN. Add a listener to INPUT_KEY_UP.
+		static inline bool isKeyUp(KeyCodes code, float timeInThePast = 0)
+		{
+			float lastUp;
+			if (upKeyMap.tryGet(code, lastUp)) {
+				return lastUp == Time::now();
+			}
+			return false;
 		}
 		static inline bool isMouseDown(MouseCodes code, float timeInThePast = 0)
 		{

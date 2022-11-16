@@ -25,8 +25,10 @@ namespace Xperrty {
 			return renderedObjects;
 		}
 		static SceneManager* instance();
+		bool multithreaded;
 	private:
 		void addObjectInBatch(GameObject* go);
+		void removeNullObjects();
 		static SceneManager* _instance;
 		SceneManager();
 		ObjectPool<GameObject> goPool;

@@ -17,22 +17,24 @@ void TerrainGenerator::generateTerrain(int width, int height) {
 	Xperrty::Texture* tile4 = Xperrty::TextureManager::getTexture(4);
 	Xperrty::Texture* tiles[]{ tile2,tile3,tile1, tile4 };
 	Xperrty::Shader* shader = Xperrty::Shader::getShader(path + "XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
-	float startX = -width / 2 * 250;
+	float tileWidth = 2500.0f;
+	float tileHeight = 2500.0f;
+	float startX = -width / 2 * tileWidth;
 	for (int i = 0; i < width; i++)
 	{
-		float startY = -height / 2 * 250;
+		float startY = -height / 2 * tileHeight;
 		for (int j = 0; j < height; j++) {
 			Xperrty::GameObject* go = Xperrty::SceneManager::instance()->createObject();
 			go->setMaterial(new Xperrty::Material(shader, tiles[i % 4], go));
 			Xperrty::SceneManager::instance()->addObject(go);
 			go->setX(startX);
 			go->setY(startY);
-			go->setWidth(250);
-			go->setHeight(250);
+			go->setWidth(tileWidth);
+			go->setHeight(tileHeight);
 			go->updateTransform();
 			go->setIsStatic(true);
-			startY += 250;
+			startY += tileHeight;
 		}
-		startX += 250;
+		startX += tileWidth;
 	}
 }

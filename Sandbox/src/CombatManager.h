@@ -72,10 +72,29 @@ private:
 	void checkCollisions();
 	//Timer for the logging things to the console to avoid spamming every frame.
 	void onLogTimerDone(float dt);
+	//Checks user input for difficulty, multithread and kill all.
+	void checkInput();
+	//sets the spawn rate of enemies and arrows.
+	void setDifficulty(unsigned int difficulty);
+	//kills all the enemies and removes all the arrows.
+	void clearEverything();
+
+	void cleanupDeadObjects();
+
+	//Helper function to loop through all arrows.
+	void internalUpdateArrows(float dt,int start);
+	//Helper function to loop through all enemies.
+	void internalUpdateEnemies(float dt,int start);
+	//Helper function to loop through all dying enemies.
+	void internalUpdateDyingEnemies(float dt,int start);
+	//Helper function to checkCollisions between an arrow and all the enemies.
+	void internalCheckCollision(int ind, Array<int>& removedArrows, Array<int>& removedEnemies);
 	static CombatManager* _instance;
 
 	float enemySpawnTimer;
 	float enemyTimer;
+
+	int arrowSpawnMult;
 	int kills;
 
 	Xperrty::Texture* arrowTexture;

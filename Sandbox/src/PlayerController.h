@@ -10,7 +10,7 @@ class PlayerController:public Xperrty::IEngineEventListener
 {
 public:
 	PlayerController();
-	~PlayerController() {};
+	~PlayerController() { delete followCam; };
 	//Listener for update.
 	void onUpdate(Xperrty::EventData* eventData);
 	//Engine event listener.
@@ -18,8 +18,8 @@ public:
 	//Returns the GameObject it's controlling.
 	inline std::shared_ptr<Xperrty::GameObject> getPlayer() { return object; }
 private:
+	Xperrty::Material* mat;
 	std::shared_ptr<Xperrty::GameObject> object;
-	std::unique_ptr<Xperrty::Material> mat;
 	Xperrty::FollowCamera* followCam;
 	AnimationPlayer* animation;
 	float speed;

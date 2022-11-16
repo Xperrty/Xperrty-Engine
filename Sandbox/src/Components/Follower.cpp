@@ -11,7 +11,9 @@ void Follower::init() {
 void Follower::onUpdate(float dt) {
 	if (!target) return;
 	Xperrty::Vector2 direction(target->getWorldPosition().x - gameObject->getWorldPosition().x, target->getWorldPosition().y - gameObject->getWorldPosition().y);
-	if (direction.magnitude() <= 100) return;
+	if (direction.magnitude() <= 300) {
+		return;
+	}
 	direction.normalize();
 	gameObject->setX(gameObject->getX() + direction.x * speed * dt);
 	gameObject->setY(gameObject->getY() + direction.y * speed * dt);

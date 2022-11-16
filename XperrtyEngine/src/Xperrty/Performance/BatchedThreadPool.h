@@ -11,6 +11,8 @@ namespace Xperrty {
 		void start();
 		//Waits for all the threads to finish work (Blocks calling thread).
 		void waitAll();
+
+		inline unsigned int getWorkerCount() { return static_cast<unsigned int>(threads.size()); }
 		BatchedThreadPool(const BatchedThreadPool& other) = delete;
 		~BatchedThreadPool();
 
