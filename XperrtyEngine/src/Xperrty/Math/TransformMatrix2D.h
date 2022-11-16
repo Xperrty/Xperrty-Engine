@@ -4,6 +4,7 @@ namespace Xperrty {
 	class TransformMatrix2D
 	{
 	public:
+		//a=scaleX,b=skewX,c=skewY,d=scaleY,tx=translationX,ty=translationY
 		TransformMatrix2D(float a, float b, float c, float d, float tx, float ty);
 		TransformMatrix2D();
 		inline void setA(float a) { variables[0] = a; }

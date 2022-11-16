@@ -10,7 +10,7 @@ class Arrow :public Xperrty::Component
 public:
 	Arrow():speed(0) {}
 	~Arrow() {}
-
+	//Called when component is added on the object.
 	virtual void onAddedToObject()override {}
 	virtual void init()override {};
 	virtual void onUpdate(float dt);

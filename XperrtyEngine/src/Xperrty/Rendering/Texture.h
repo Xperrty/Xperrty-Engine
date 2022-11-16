@@ -4,8 +4,6 @@ namespace Xperrty {
 	class Texture
 	{
 	public:
-		//TODO:Implement Texture manager...
-		//TODO:Implement off thread loading
 		Texture(const std::string& path);
 		Texture();
 
@@ -22,6 +20,8 @@ namespace Xperrty {
 
 		//ToDo:remove all the opengl stuff...
 		void uploadToGpu();
+		//Frees the texture memory on the gpu.
+		void freeGpuTexture();
 		~Texture();
 	private:
 		unsigned char* pixels;

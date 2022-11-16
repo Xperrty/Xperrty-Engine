@@ -30,8 +30,9 @@ namespace Xperrty {
 		Rect(float x, float y, float width, float height);
 		//Quick AABB Collision
 		static bool intersects(const Rect& first, const Rect& second);
+		//AABB With rotation. NOT IMPLEMENTED! ToDo:implement
 		static bool intersects(const Rect& first, float rotationFirst, const Rect& second, float rotationSecond);
-		//ToDo:implement;
+		//AABB With rotation and anchors. NOT IMPLEMENTED! ToDo:implement
 		static bool intersects(const Rect& first, float rotationFirst, const Vector2& anchorFirst, const Rect& second, float rotationSecond, const Vector2& anchorSecond);
 		~Rect();
 		float x;

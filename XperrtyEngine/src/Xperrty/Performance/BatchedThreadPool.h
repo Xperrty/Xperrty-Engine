@@ -12,6 +12,7 @@ namespace Xperrty {
 		//Waits for all the threads to finish work (Blocks calling thread).
 		void waitAll();
 
+		//Returns the worker count in this pool.
 		inline unsigned int getWorkerCount() { return static_cast<unsigned int>(threads.size()); }
 		BatchedThreadPool(const BatchedThreadPool& other) = delete;
 		~BatchedThreadPool();

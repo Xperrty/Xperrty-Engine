@@ -27,10 +27,8 @@ namespace Xperrty {
 		int batchSize = 200;
 		Timer<Application> timer(2000.0f, -1, this, &Application::onTimerDone);
 
-		XP_INFO("Sizeof size_t{0}", sizeof(size_t));
 		while (isRunning)
 		{
-
 			time->update();
 			InputManager::update();
 			EventManager::invoke(UPDATE, &Time::ed);
@@ -40,7 +38,7 @@ namespace Xperrty {
 			window->updateWindow();
 			if (!window->isAlive())terminate();
 		}
-
+		TextureManager::destroy();
 		return;
 
 

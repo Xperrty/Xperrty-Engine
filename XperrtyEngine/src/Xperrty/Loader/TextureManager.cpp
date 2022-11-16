@@ -2,18 +2,7 @@
 #include "TextureManager.h"
 #include <filesystem>
 namespace Xperrty {
-	/*void TextureManager::getTexture(int id, std::function<void(Texture* texture)> onTextureLoaded) {
-		if (textureMap.contains(id)) {
-			onTextureLoaded(textureMap[id]);
-			return;
-		}
-		//ToDo:make this multithreaded.
-		Texture* t = new Texture(texturePathMap[id]);
-		textureMap.add(id, t);
-		t->uploadToGpu();
-		onTextureLoaded(textureMap[id]);
-		//XP_INFO("Loaded texture with id{0} and ptr{1}", id, long int(t));
-	}*/
+
 	void TextureManager::freeTexturePtr(Texture* texture) {
 		texturePool.deleteObject(texture);
 	}
@@ -32,7 +21,6 @@ namespace Xperrty {
 		//ToDo:make this multithreaded.
 		Texture* t = texturePool.newObject(texturePathMap[id]);
 		textureMap.add(id, t);
-		//XP_INFO("Loaded texture with id{0} and ptr{1}", id, long int(t));
 		t->uploadToGpu();
 		//We do this to get a new pointer to the freshly created texture (freeTexturePtr will break all textures if it's called with the main pointer)...
 		//ToDo:Fix this, it's not ok. 
@@ -57,6 +45,14 @@ namespace Xperrty {
 		addTexturePath(6, path + "Sandbox\\assets\\images\\arrow.png");
 		addTexturePath(7, path + "Sandbox\\assets\\images\\character.png");
 		addTexturePath(8, path + "Sandbox\\assets\\images\\zombie.png");
+	}
+
+	void TextureManager::destroy() {
+		for each (auto& kv in textureMap)
+		{
+			kv.second->freeGpuTexture();
+		}
+		textureMap.clear();
 	}
 
 	Dictionary<int, Texture*> TextureManager::textureMap;

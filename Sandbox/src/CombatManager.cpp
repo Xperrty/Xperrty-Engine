@@ -224,7 +224,7 @@ void CombatManager::spawnArrows(int count) {
 	direction.normalize();
 	//int numberOfArrows = std::min(256, kills / 100 + 1);
 	int numberOfArrows = arrowSpawnMult * count;
-	float rotationDifference = std::min(toRadians(10), Pi * 2 / numberOfArrows);
+	float rotationDifference = std::min(toRadians(10), PI * 2 / numberOfArrows);
 
 	float arrowSpeed = 1500;
 	float directionToAngle = atan2(direction.y, direction.x);
@@ -244,7 +244,7 @@ void CombatManager::spawnArrows(int count) {
 		arrow->setX(playerController.getPlayer()->getWorldPosition().x + direction.x * distance);
 		arrow->setY(playerController.getPlayer()->getWorldPosition().y + direction.y * distance);
 
-		arrow->setRotation(startAngle + Pi / 2);
+		arrow->setRotation(startAngle + PI / 2);
 		Arrow* arrowComp = arrow->addComponent<Arrow>();
 		arrowComp->setDirection(direction, arrowSpeed);
 		arrows.push_back({ arrow,arrowComp });

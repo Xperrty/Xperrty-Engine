@@ -3,7 +3,6 @@
 
 namespace Xperrty {
 	FollowCamera::FollowCamera(Rect bounds) :RTSCamera(bounds, 1, 0),followTarget(nullptr) {
-		XP_INFO("FOLLOW CAMERA CREATED!");
 
 	}
 	void FollowCamera::update() {

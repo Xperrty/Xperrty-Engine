@@ -6,7 +6,6 @@ namespace Xperrty {
 	{
 		if (activeCamera == nullptr)activeCamera = this;
 		EventManager::addEventListener(WINDOW_RESIZE, this);
-		XP_INFO("CAMERA CREATED!");
 	}
 	void Camera::onEngineEvent(Xperrty::EngineEventType eventNr, Xperrty::EventData* eventData) {
 		if (eventNr == WINDOW_RESIZE) {

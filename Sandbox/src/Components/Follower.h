@@ -8,7 +8,7 @@ class Follower :public Xperrty::Component
 {
 public:
 	~Follower() = default;
-
+	//Called when component is added on the object.
 	virtual void onAddedToObject()override;
 	virtual void init()override;
 	virtual void onUpdate(float dt)override;

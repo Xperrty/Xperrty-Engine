@@ -30,7 +30,7 @@ namespace Xperrty {
 			return downKeyMap.contains(code);
 		}
 
-		//BROKEN. Add a listener to INPUT_KEY_UP.
+		//Returns true if key was release this frame.
 		static inline bool isKeyUp(KeyCodes code, float timeInThePast = 0)
 		{
 			float lastUp;
@@ -39,6 +39,7 @@ namespace Xperrty {
 			}
 			return false;
 		}
+		//Returns true if mouse is down this frame. (True as long as mouse button is held down)
 		static inline bool isMouseDown(MouseCodes code, float timeInThePast = 0)
 		{
 			float lastDown;
@@ -75,8 +76,6 @@ namespace Xperrty {
 
 	struct InputInteraction {
 		InputInteraction() : keyCode(KEY_A), mouseCode(MOUSE_BUTTON_1), scrollValue(0), action(Down) {}
-		//InputInteraction(const InputInteraction& other) = delete;
-		//InputInteraction(InputInteraction& other) = delete;
 		KeyCodes keyCode;
 		MouseCodes mouseCode;
 		float scrollValue;

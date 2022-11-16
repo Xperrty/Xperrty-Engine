@@ -2,6 +2,7 @@
 #include "Xperrty/Containers/Array.h"
 namespace Xperrty {
 
+	//Object pool with fixed chunk sizes. If one chunk is full, another will be created.
 	template <typename T>
 	class ObjectPool
 	{
@@ -13,6 +14,7 @@ namespace Xperrty {
 			memoryChunks.reserve(2);
 			allocateNewChunk();
 		}
+		//Creates a new object.
 		template<typename... Args>
 		T* newObject(Args... args) {
 			
@@ -21,8 +23,9 @@ namespace Xperrty {
 			debugAllocArray.push_back(memorySpot);
 			return new(memorySpot) T(args...);
 		}
+		//Destroys the object and marks its spot in the poll as empty
 		void deleteObject(T* object) {
-			//return;
+			//ToDo:remove debug code.
 			if (debugAllocArray.contains((char*)object)) {
 				debugAllocArray.remove((char*)object);
 
@@ -32,9 +35,10 @@ namespace Xperrty {
 			int objectIndex = findObjectIndex(object);
 			object->~T();
 			freePositions.push_back(objectIndex);
-			//if (debug) XP_INFO("Deleted object at memLocation {0} and freed index {1}", (unsigned long long)object, objectIndex);
 		}
+		//returns an index to the last memory spot.
 		inline int getIndex() { return lastPointer; }
+		//returns the total chunks in this pool.
 		inline int totalChunks() { return memoryChunks.size(); }
 
 		~ObjectPool() {
@@ -55,6 +59,7 @@ namespace Xperrty {
 			}
 			XP_WARN("Object Pool Deleted!");
 		}
+		//if set true, debug 
 		bool debug;
 	private:
 		inline char* getNextAvailableSpot() {
@@ -67,17 +72,14 @@ namespace Xperrty {
 			else {
 				lastPointer++;
 			}
-			//if (lastPointer > chunkSize) {
 			int chunkNr = indexInPool / chunkSize;
 			int indexInChunk = indexInPool % chunkSize;
 			//We need to allocate another chunk;
 			while (chunkNr >= memoryChunks.size()) {
 				allocateNewChunk();
 			}
-			//if (debug) XP_INFO("Created object at memLocation {0} Chunk{1} Index in Chunk{2} ", (unsigned long long)(memoryChunks[chunkNr] + indexInChunk * sizeof(T)),chunkNr,indexInChunk);
 
 			return memoryChunks[chunkNr] + indexInChunk * sizeof(T);
-			//}
 		}
 		void allocateNewChunk() {
 			memoryChunks.push_back((char*)malloc(sizeof(T) * chunkSize));

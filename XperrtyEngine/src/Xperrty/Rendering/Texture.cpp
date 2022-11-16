@@ -24,7 +24,7 @@ namespace Xperrty {
 		glGenTextures(1, &texId);
 		glActiveTexture(GL_TEXTURE0 + id);
 		glBindTexture(GL_TEXTURE_2D, texId);
-		XP_INFO("Texture {0} id {1}", id, texId);
+		//XP_INFO("Texture {0} id {1}", id, texId);
 		//glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevelCount, GL_RGBA8, width, height, layerCount);
 		//glTexStorage3D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 1);
 		//glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, layerCount, GL_RGBA, GL_UNSIGNED_BYTE, texels);
@@ -40,6 +40,10 @@ namespace Xperrty {
 		//glTexImage2D()
 		//ToDo: free texture after uploading to gpu;
 
+	}
+
+	void Texture::freeGpuTexture() {
+		glDeleteTextures(1, &texId);
 	}
 	Texture::~Texture()
 	{
