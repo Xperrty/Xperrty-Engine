@@ -33,6 +33,5 @@ public:
 		if (containsKey) outVar = (*this)[key];
 		return containsKey;
 	}
-	
 };
 

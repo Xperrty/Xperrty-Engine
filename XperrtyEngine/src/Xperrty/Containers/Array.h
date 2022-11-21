@@ -25,6 +25,22 @@ public:
 		}
 		return removedItems;
 	}
+	/// Removes the item from the Array starting from the back of the array.
+	int removeFromBack(const T& val, bool continueAfterFirst = true)
+	{
+		int removedItems = 0;
+		for (int i = size()-1; i>=0; i--)
+		{
+			T& el = (*this)[i];
+			if (el == val) {
+				erase(begin() + i);
+				i--;
+				removedItems++;
+				if (!continueAfterFirst) break;
+			}
+		}
+		return removedItems;
+	}
 
 	//Removes the element at index.
 	void removeAt(int index) {

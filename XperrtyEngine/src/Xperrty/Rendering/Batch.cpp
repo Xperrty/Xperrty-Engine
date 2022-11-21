@@ -41,7 +41,6 @@ namespace Xperrty {
 			//if (Rect::intersects(cameraBounds, go->getWorldBounds()))
 			go->getMaterial()->setVerticesMemLocation((MaterialVertexData*)bd.getVertex(i));
 		}
-		//XP_INFO("{0}",gameObjects[0]->getAngle());
 		done = true;
 	}
 }
