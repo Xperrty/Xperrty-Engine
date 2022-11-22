@@ -17,6 +17,7 @@ namespace Xperrty {
 	protected:
 		Array<Array<Array<GameObject*>>> worldMap;
 		Dictionary<GameObject*, Array<Vector2ui>> objectWorldMap;
+		Array<Vector2ui> lodSize;
 	private:
 		WorldBounds() :width(0), height(0),cellWidth(0.0f),cellHeight(0.0f) { instance = this; }
 		~WorldBounds() { instance = nullptr; }

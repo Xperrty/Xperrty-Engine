@@ -18,6 +18,16 @@ namespace Xperrty {
 				worldMap[i][j].emplace_back();
 			}
 		}
+		unsigned int wCopy = width;
+		unsigned int hCopy = height;
+		while (wCopy && hCopy)
+		{
+			if (wCopy == 0) wCopy = 1;
+			if (hCopy == 0) hCopy = 1;
+			lodSize.emplace_back(wCopy, hCopy);
+			wCopy /= 2;
+			hCopy /= 2;
+		}
 	}
 	void WorldBounds::addObject(GameObject* object)
 	{
