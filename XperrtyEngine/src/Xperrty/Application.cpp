@@ -11,10 +11,14 @@
 namespace Xperrty {
 
 	Application::Application() :
-		isRunning(true), time(new Time()), window(new Window(1920, 1080)), renderer(new Renderer2D()), mainCamera(new Camera(Rect(0, 0, 1280, 720), 1)), input(new InputManager())
+		isRunning(true), time(new Time()), window(new Window(1920, 1080)), renderer(new Renderer2D()), mainCamera(new Camera(Rect(0, 0, 1280, 720), 1)), input(new InputManager()), bounds(new WorldBounds())
 	{
 		updates = 0;
 		TextureManager::init();
+		bounds->setWorldSize(1000, 1000, 250, 250);
+		//bounds->setWorldSize(4096/2, 4096/2, 250, 250);
+		//bounds->setWorldSize(4096*4, 4096*4, 250, 250);
+		XP_INFO("Size of vector of vector:{0}", sizeof(Array<GameObject*>));
 	}
 
 	Application::~Application()

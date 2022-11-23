@@ -6,6 +6,7 @@
 #include "Xperrty/Rendering/Renderer2D.h"
 #include "Xperrty/Rendering/Cameras/Camera.h"
 #include "Xperrty/Input/InputManager.h"
+#include "World/WorldBounds.h"
 namespace Xperrty {
 
 	class Application
@@ -16,6 +17,7 @@ namespace Xperrty {
 		Window* window;
 		Renderer2D* renderer;
 		Camera* mainCamera;
+		WorldBounds* bounds;
 		InputManager* input;
 		void onTimerDone(float extraTime);
 		virtual void init() = 0;
