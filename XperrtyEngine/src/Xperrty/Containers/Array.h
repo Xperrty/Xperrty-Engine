@@ -29,7 +29,7 @@ public:
 	int removeFromBack(const T& val, bool continueAfterFirst = true)
 	{
 		int removedItems = 0;
-		for (int i = size()-1; i>=0; i--)
+		for (int i = size() - 1; i >= 0; i--)
 		{
 			T& el = (*this)[i];
 			if (el == val) {
@@ -53,6 +53,19 @@ public:
 	/// <param name="item">Item to check.</param>
 	/// <returns>True if item found.</returns>
 	inline bool contains(const T& item) {
-		return std::find(begin(), end(), item)!=end();
+		return std::find(begin(), end(), item) != end();
+	}
+
+	inline size_t indexOf(const T& item) {
+		auto it = std::find(begin(), end(), item);
+
+		// If element was found
+		if (it != end())
+		{
+			int index = it - v.begin();
+		}
+		else {
+			return -1;
+		}
 	}
 };

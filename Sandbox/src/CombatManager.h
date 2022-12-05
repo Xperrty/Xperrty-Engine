@@ -89,7 +89,13 @@ private:
 	void internalUpdateDyingEnemies(float dt,int start);
 	//Helper function to checkCollisions between an arrow and all the enemies.
 	void internalCheckCollision(int ind, Array<int>& removedArrows, Array<int>& removedEnemies);
+	//Helper function to checkCollisions between an arrow and all the enemies.
+	void internalCheckCollisionWithWorldBounds(int ind, Array<int>& removedArrows, Array<int>& removedEnemies);
+
+	int getEnemyIndexByGameObject(Xperrty::GameObject* object);
 	static CombatManager* _instance;
+
+	unsigned int enemyCap;
 
 	float enemySpawnTimer;
 	float enemyTimer;

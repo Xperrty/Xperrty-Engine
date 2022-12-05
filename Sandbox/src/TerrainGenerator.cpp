@@ -17,8 +17,8 @@ void TerrainGenerator::generateTerrain(int width, int height) {
 	Xperrty::Texture* tile4 = Xperrty::TextureManager::getTexture(4);
 	Xperrty::Texture* tiles[]{ tile2,tile3,tile1, tile4 };
 	Xperrty::Shader* shader = Xperrty::Shader::getShader(path + "XperrtyEngine\\src\\Xperrty\\Rendering\\Shaders\\MultiTextureShader.glsl");
-	float tileWidth = 2500.0f;
-	float tileHeight = 2500.0f;
+	float tileWidth = 250.0f;
+	float tileHeight = 250.0f;
 	float startX = -width / 2 * tileWidth;
 	for (int i = 0; i < width; i++)
 	{

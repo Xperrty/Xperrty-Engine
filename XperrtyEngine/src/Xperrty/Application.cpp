@@ -5,9 +5,9 @@
 
 //TODO:DELETE. For testing only
 #include "Xperrty/Time/Timer.h"
+#include "Xperrty/Testing/Test.h"
 
 //Tests
-#include "Testing/BatchTest.h"
 namespace Xperrty {
 
 	Application::Application() :
@@ -16,9 +16,10 @@ namespace Xperrty {
 		updates = 0;
 		TextureManager::init();
 		bounds->setWorldSize(1000, 1000, 250, 250);
+		//Tests::Test t;
 		//bounds->setWorldSize(4096/2, 4096/2, 250, 250);
 		//bounds->setWorldSize(4096*4, 4096*4, 250, 250);
-		XP_INFO("Size of vector of vector:{0}", sizeof(Array<GameObject*>));
+		XP_INFO("Size of vector of Bounds Cell:{0}", sizeof(WorldBoundsCell));
 	}
 
 	Application::~Application()
@@ -35,6 +36,7 @@ namespace Xperrty {
 		{
 			time->update();
 			InputManager::update();
+			WorldBounds::instance->resetDynamic();
 			EventManager::invoke(UPDATE, &Time::ed);
 			updates++;
 			renderer->clear();

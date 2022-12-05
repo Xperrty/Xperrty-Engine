@@ -1,23 +1,12 @@
 #include "xppch.h"
 #include "Test.h"
+#include "WorldBoundsTest.h"
 //#include "Xperrty/Events/EventDispatcher.h"
-//namespace Xperrty {
-//
-//	TestUpdate::TestUpdate()
-//	{
-//		EventDispatcher<EUpdate, float>::addListener(this);
-//	}
-//	TestUpdate::~TestUpdate()
-//	{
-//	}
-//	void TestUpdate::onEventTEST_A()
-//	{
-//	}
-//	void TestUpdate::onEventTEST_B()
-//	{
-//	}
-//	void TestUpdate::onUpdate(float dt)
-//	{
-//		XP_TRACE("UPDATE!!");
-//	}
-//}
+namespace Xperrty {
+	namespace Tests {
+		Test::Test() {
+			XP_INFO("Should start tests!");
+			WorldBoundsTest test;
+		}
+	}
+}

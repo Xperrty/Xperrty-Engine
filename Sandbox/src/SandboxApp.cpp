@@ -4,7 +4,7 @@
 #include "Xperrty/Rendering/Cameras/FollowCamera.h"
 class SandboxApp :public  Xperrty::Application, public Xperrty::IEngineEventListener {
 public:
-	SandboxApp() : terrain(50, 40), combatManager() {
+	SandboxApp() : terrain(0, 0), combatManager() {
 		Xperrty::EventManager::addEventListener(Xperrty::UPDATE, this);
 		//ToDo: Memory cleanup... lifetime of all the objects and events is the same as the app atm.
 	}

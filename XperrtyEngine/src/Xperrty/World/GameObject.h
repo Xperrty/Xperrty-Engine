@@ -3,6 +3,7 @@
 #include "Xperrty/Rendering/Material.h"
 #include "Xperrty/Math/TransformMatrix2D.h"
 #include "Xperrty/Math/MathDefines.h"
+#include "Xperrty/Math/Vector2ui.h"
 namespace Xperrty {
 
 	class GameObject
@@ -31,7 +32,7 @@ namespace Xperrty {
 			for (int i = 0; i < components.size(); i++)
 			{
 				T* rez = dynamic_cast<T*>(components[i]);
-					if (rez) return rez;
+				if (rez) return rez;
 			}
 			return nullptr;
 		}
@@ -71,6 +72,8 @@ namespace Xperrty {
 		inline float getWorldAlpha() const { return worldAlpha; }
 		inline float getIsStatic() const { return isStatic; }
 
+		inline Array<Vector2ui>& getWorldCells() { return worldCells; }
+
 		inline Rect& getWorldBounds() { return worldBounds; }
 		inline Vector2& getWorldPosition() { return worldPosition; }
 		inline Vector2& getWorldScale() { return worldScale; }
@@ -102,6 +105,7 @@ namespace Xperrty {
 		std::string name;
 		Array<GameObject*> children;
 		Array<Component*> components;
+		Array<Vector2ui> worldCells;
 	};
 }
 

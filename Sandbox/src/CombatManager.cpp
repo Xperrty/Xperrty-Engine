@@ -7,14 +7,16 @@
 #include "Xperrty/Containers/Array.h"
 #include <filesystem>
 #include "Xperrty/Time/Stopwatch.h"
+#include "Xperrty/World/WorldBounds.h"
+#include "Xperrty/Math/Vector2ui.h"
 // temp random
 #include <cstdlib>
 
-CombatManager::CombatManager() :playerController(), enemiesPool(1000), arrowsPool(1000), materialsPool(2000), removeMutex(), mainShader(Xperrty::Shader::getShader(Xperrty::Shader::getDefaultShaderPath())), arrowTexture(Xperrty::TextureManager::getTexture(6)), enemySpawnTimer(1), enemyTimer(0), threadPool(std::thread::hardware_concurrency()-2), kills(0), arrowSpawnMult(1), logTimer(2000, -1, this, &CombatManager::onLogTimerDone) {
+CombatManager::CombatManager() :playerController(), enemiesPool(1000), arrowsPool(1000), materialsPool(2000), removeMutex(), mainShader(Xperrty::Shader::getShader(Xperrty::Shader::getDefaultShaderPath())), arrowTexture(Xperrty::TextureManager::getTexture(6)), enemySpawnTimer(1), enemyTimer(0), threadPool(std::thread::hardware_concurrency() - 2), kills(0), arrowSpawnMult(1), logTimer(2000, -1, this, &CombatManager::onLogTimerDone), enemyCap(10000) {
 	_instance = this;
 	Xperrty::EventManager::addEventListener(Xperrty::UPDATE, this);
 	enemiesPool.debug = true;
-	setDifficulty(0);
+	setDifficulty(6);
 	//kills = 20000;
 	//Xperrty
 }
@@ -33,6 +35,7 @@ void CombatManager::internalUpdateArrows(float dt, int start) {
 			std::lock_guard<std::mutex> removeGuard(removeMutex);
 			arrowsToRemove.push_back(arrows[i]);
 		}
+		else Xperrty::WorldBounds::instance->updateObject(arrows[i].arrow);
 	}
 }
 
@@ -85,6 +88,7 @@ void CombatManager::internalUpdateEnemies(float dt, int start) {
 		enemies[i].animationPlayer->onUpdate(dt);
 		enemies[i].follower->onUpdate(dt);
 		enemies[i].enemy->updateTransform();
+		Xperrty::WorldBounds::instance->updateObject(enemies[i].enemy);
 	}
 }
 void CombatManager::internalUpdateDyingEnemies(float dt, int start) {
@@ -132,6 +136,40 @@ void CombatManager::internalCheckCollision(int ind, Array<int>& removedArrows, A
 		}
 	}
 }
+void CombatManager::internalCheckCollisionWithWorldBounds(int ind, Array<int>& removedArrows, Array<int>& removedEnemies) {
+	Array<Xperrty::Vector2ui>& arrowWorldPositions = arrows[ind].arrow->getWorldCells();
+	for (int i = 0; i < arrowWorldPositions.size(); i++)
+	{
+		Xperrty::Vector2ui& cellPositions = arrowWorldPositions[i];
+		auto& cell = Xperrty::WorldBounds::instance->getObjectsInCell(cellPositions);
+		//if (cell.dynamicIndex != 0) APP_INFO("Cell Size:{0}", cell.dynamicIndex);
+		Array<Xperrty::GameObject*>& objectsInCell = cell.dynamicObjects;
+		for (int j = 0; j <= cell.dynamicIndex; j++)
+		{
+			if (objectsInCell[j] == arrows[ind].arrow) continue;
+			Xperrty::Vector2 distance(arrows[ind].arrow->getWorldPosition() - objectsInCell[j]->getWorldPosition());
+			if (distance.magnitude() < 128) {
+				std::lock_guard<std::mutex> removeGuard(removeMutex);
+
+				//To avoid locking without needing to, we lock it now and add the collisions.
+				if (!removedArrows.contains(ind) && !removedEnemies.contains(getEnemyIndexByGameObject(objectsInCell[j])))removedArrows.push_back(ind);
+				if (!removedEnemies.contains(j)) {
+					enemies[j].follower->setSpeed(0);
+					enemies[j].animationPlayer->playAnimation(0, 0.5, 1);
+					removedEnemies.push_back(j);
+					break;
+				}
+			}
+		}
+	}
+}
+int CombatManager::getEnemyIndexByGameObject(Xperrty::GameObject* object) {
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (enemies[i].enemy == object) return i;
+	}
+	return -1;
+}
 
 void CombatManager::checkCollisions() {
 
@@ -145,7 +183,7 @@ void CombatManager::checkCollisions() {
 			//Really slow... but for now throw power at the problem and move on.
 			if (Xperrty::SceneManager::instance()->multithreaded) {
 
-				threadPool.queue([&, this, ind = i]() mutable {internalCheckCollision(ind, removedArrows, removedEnemies); });
+				threadPool.queue([&, this, ind = i]() mutable {internalCheckCollisionWithWorldBounds(ind, removedArrows, removedEnemies); });
 			}
 			else internalCheckCollision(i, removedArrows, removedEnemies);
 		}
@@ -187,7 +225,7 @@ void CombatManager::updateObjects() {
 }
 
 void CombatManager::generateObjects(float dt) {
-	if (enemies.size() > 200000) return;
+	if (enemies.size() > enemyCap) return;
 	enemyTimer -= dt;
 	while (enemyTimer < 0) {
 		enemyTimer += enemySpawnTimer;
@@ -263,7 +301,7 @@ void CombatManager::checkInput() {
 	if (Xperrty::InputManager::isKeyUp(Xperrty::KEY_6)) setDifficulty(6);
 	if (Xperrty::InputManager::isKeyUp(Xperrty::KEY_SPACE)) {
 		Xperrty::SceneManager::instance()->multithreaded = !Xperrty::SceneManager::instance()->multithreaded;
-		if(Xperrty::SceneManager::instance()->multithreaded)APP_INFO("Multithreading ON! Using {0} worker threads.",threadPool.getWorkerCount());
+		if (Xperrty::SceneManager::instance()->multithreaded)APP_INFO("Multithreading ON! Using {0} worker threads.", threadPool.getWorkerCount());
 		else APP_INFO("Multithreading OFF!");
 	}
 	if (Xperrty::InputManager::isKeyUp(Xperrty::KEY_ESCAPE)) { clearEverything(); }
@@ -296,7 +334,7 @@ void CombatManager::setDifficulty(unsigned int difficulty) {
 	}
 	else if (difficulty == 6) {
 		arrowSpawnMult = 512;
-		enemySpawnTimer = 0.00055f;
+		enemySpawnTimer = 0.000055f;
 	}
 }
 void CombatManager::clearEverything() {
